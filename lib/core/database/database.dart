@@ -170,8 +170,6 @@ class NexusBrainDatabase extends _$NexusBrainDatabase {
   );
 
   static QueryExecutor _openConnection() {
-    // For web, use in-memory database (drift_flutter 0.1.0 doesn't support web)
-    // TODO: Use drift_web or sqflite_common_ffi_web for persistent web storage
     return driftDatabase(name: 'nexusbrain');
   }
 

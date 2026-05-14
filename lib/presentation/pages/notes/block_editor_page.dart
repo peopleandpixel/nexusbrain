@@ -19,6 +19,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
   final Map<String, TextEditingController> _blockControllers = {};
   final Map<String, FocusNode> _blockFocusNodes = {};
   final Map<String, _UndoState> _undoStack = {};
+  final Map<String, _UndoState> _redoStack = {};
   String? _editingBlockId;
 
   bool _showLinkSuggestions = false;
@@ -80,6 +81,25 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
     if (state == null) return;
     final controller = _blockControllers[blockId];
     if (controller == null) return;
+    // Save current state to redo stack before undoing
+    _redoStack[blockId] = _UndoState(
+      text: controller.text,
+      cursorPos: controller.selection.baseOffset,
+    );
+    controller.text = state.text;
+    controller.selection = TextSelection.collapsed(offset: state.cursorPos.clamp(0, controller.text.length));
+  }
+
+  void _redo(String blockId) {
+    final state = _redoStack[blockId];
+    if (state == null) return;
+    final controller = _blockControllers[blockId];
+    if (controller == null) return;
+    // Save current state to undo stack before redoing
+    _undoStack[blockId] = _UndoState(
+      text: controller.text,
+      cursorPos: controller.selection.baseOffset,
+    );
     controller.text = state.text;
     controller.selection = TextSelection.collapsed(offset: state.cursorPos.clamp(0, controller.text.length));
   }
@@ -151,6 +171,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
           onAddChild: () => _addChildBlock(blocks[index].id),
           onAddAfter: () => _addBlockAfter(blocks[index].id),
           onUndo: () => _undo(blocks[index].id),
+          onRedo: () => _redo(blocks[index].id),
           onSaveUndoState: () => _saveUndoState(blocks[index].id),
           onCycleTaskState: () => _cycleTaskState(blocks[index]),
         );
@@ -308,6 +329,7 @@ class _BlockItem extends ConsumerStatefulWidget {
   final VoidCallback onAddChild;
   final VoidCallback onAddAfter;
   final VoidCallback onUndo;
+  final VoidCallback onRedo;
   final VoidCallback onSaveUndoState;
   final VoidCallback onCycleTaskState;
 
@@ -324,6 +346,7 @@ class _BlockItem extends ConsumerStatefulWidget {
     required this.onAddChild,
     required this.onAddAfter,
     required this.onUndo,
+    required this.onRedo,
     required this.onSaveUndoState,
     required this.onCycleTaskState,
   });
@@ -357,6 +380,8 @@ class _BlockItemState extends ConsumerState<_BlockItem> {
     // Save undo state on first change after focus
     if (widget.focusNode.hasFocus) {
       widget.onSaveUndoState();
+      // Clear redo stack on new input
+      _redoStack.remove(widget.block.id);
     }
   }
 
@@ -468,6 +493,8 @@ class _BlockItemState extends ConsumerState<_BlockItem> {
                     _BlockAction(icon: Icons.keyboard_return, tooltip: 'Block darunter (Alt+Enter)', onTap: widget.onAddAfter),
                     const SizedBox(width: 4),
                     _BlockAction(icon: Icons.undo_rounded, tooltip: 'Rückgängig (Ctrl+Z)', onTap: widget.onUndo),
+                    const SizedBox(width: 4),
+                    _BlockAction(icon: Icons.redo_rounded, tooltip: 'Wiederherstellen (Ctrl+Shift+Z)', onTap: widget.onRedo),
                     const Spacer(),
                     if (widget.block.isTask)
                       _BlockAction(icon: Icons.check_circle_outline, tooltip: 'Status wechseln', onTap: widget.onCycleTaskState, color: Color(widget.block.taskColor)),
@@ -529,9 +556,9 @@ class _BlockItemState extends ConsumerState<_BlockItem> {
       return;
     }
 
-    // Ctrl+Shift+Z = redo (not implemented yet)
+    // Ctrl+Shift+Z = redo
     if (event.logicalKey == LogicalKeyboardKey.keyZ && isCtrl && isShift) {
-      // TODO: Implement redo
+      widget.onRedo();
       return;
     }
 

@@ -1,17 +1,81 @@
-# mindvault
+# NexusBrain
 
-A new Flutter project.
+A personal knowledge management app — Logseq alternative built with Flutter.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Block-based editor** — Logseq-style outliner with infinite nesting
+- **Task management** — TODO / DOING / DONE / CANCELLED states with keyboard shortcuts
+- **WikiLinks** — `[[Page Title]]` syntax for page links
+- **Block references** — `((block-id))` for deep linking
+- **Graph visualization** — Visual map of page connections
+- **Semantic search** — AI-powered embeddings for content discovery
+- **Full-text search** — SQLite FTS5 for fast content search
+- **WebDAV sync** — Nextcloud / ownCloud integration
+- **Import/Export** — Markdown file support
+- **Cross-platform** — Web, Desktop (Linux, macOS, Windows), Mobile (Android, iOS)
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- **Language:** Dart
+- **Framework:** Flutter
+- **Database:** Drift (SQLite) with FTS5
+- **State Management:** Riverpod
+- **AI:** Embeddings for semantic search
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Project Structure
+
+```
+lib/
+├── core/
+│   ├── ai/            # Embedding service, AI features
+│   └── database/      # Drift database schema & queries
+├── data/
+│   ├── repositories/  # Block & note repositories
+│   └── services/      # Import/Export, WebDAV sync
+├── domain/models/     # Block, Note, Page models
+└── presentation/      # UI pages, state, theme
+```
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Enter | Newline (empty block → new sibling) |
+| Ctrl+Enter | Add child block |
+| Alt+Enter | Add block below |
+| Tab | Indent |
+| Shift+Tab | Outdent |
+| Ctrl+Z | Undo |
+| Ctrl+Shift+Z | Redo |
+| Ctrl+Backspace | Delete block |
+| Ctrl+T | Toggle task state |
+
+## Development
+
+```bash
+# Install dependencies
+flutter pub get
+
+# Generate code (drift, json_serializable)
+flutter packages pub run build_runner build
+
+# Run on current platform
+flutter run
+
+# Build for web
+flutter build web
+
+# Build for Android
+flutter build apk --release
+```
+
+## Platform Notes
+
+- **Web:** Uses drift_flutter with SQLite WASM. Persistent storage via IndexedDB.
+- **Android/iOS:** SQLite via `sqlite3_flutter_libs`
+- **Desktop:** Native SQLite via drift
+
+## License
+
+Private — peopleandpixel
