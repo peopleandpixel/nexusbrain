@@ -106,7 +106,7 @@ class DriftBlockRepository {
     int indentLevel = 0,
   }) async {
     final now = DateTime.now();
-    final id = '${pageId}_${now.millisecondsSinceEpoch}';
+    final id = '${pageId}_${now.millisecondsSinceEpoch}_${now.microsecond}';
     final idx = orderIndex ?? await _database.getNextOrderIndex(pageId);
 
     await _database.insertBlock(db.BlocksCompanion(
@@ -157,8 +157,7 @@ class DriftBlockRepository {
       }
     }
 
-    await _database.updateBlock(db.BlocksCompanion(
-      id: Value(blockId),
+    await _database.updateBlock(blockId, db.BlocksCompanion(
       parentId: Value(newParentId),
       orderIndex: Value(newOrderIndex),
       indentLevel: Value(newIndent),

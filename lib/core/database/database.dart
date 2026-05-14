@@ -223,7 +223,30 @@ class NexusBrainDatabase extends _$NexusBrainDatabase {
       (select(blocks)..where((b) => b.id.equals(id))).getSingleOrNull();
 
   Future<int> insertBlock(BlocksCompanion block) => into(blocks).insert(block);
-  Future<int> updateBlock(BlocksCompanion block) => update(blocks).write(block);
+  Future<int> updateBlock(BlocksCompanion block) async {
+    return customUpdate(
+      'UPDATE blocks SET page_id = ?, parent_id = ?, content = ?, order_index = ?, '
+      'indent_level = ?, is_collapsed = ?, task_state = ?, scheduled_at = ?, '
+      'deadline_at = ?, completed_at = ?, created_at = ?, updated_at = ? '
+      'WHERE id = ?',
+      variables: [
+        Variable<String>(block.pageId.value),
+        Variable<String?>(block.parentId.value),
+        Variable<String>(block.content.value),
+        Variable<int>(block.orderIndex.value),
+        Variable<int>(block.indentLevel.value),
+        Variable<bool>(block.isCollapsed.value),
+        Variable<String?>(block.taskState.value),
+        Variable<DateTime?>(block.scheduledAt.value),
+        Variable<DateTime?>(block.deadlineAt.value),
+        Variable<DateTime?>(block.completedAt.value),
+        Variable<DateTime>(block.createdAt.value),
+        Variable<DateTime>(block.updatedAt.value),
+        Variable<String>(block.id.value),
+      ],
+      updates: {blocks},
+    );
+  }
   Future<int> deleteBlock(String id) =>
       (delete(blocks)..where((b) => b.id.equals(id))).go();
 

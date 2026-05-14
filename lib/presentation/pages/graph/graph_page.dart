@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:nexusbrain/presentation/state/notes_state.dart';
 import 'package:nexusbrain/presentation/theme.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:nexusbrain/domain/models/page.dart' as domain;
 
 class GraphPage extends ConsumerStatefulWidget {
@@ -217,7 +218,7 @@ class _GraphPainter extends CustomPainter {
           text: page.title.length > 20 ? '${page.title.substring(0, 20)}...' : page.title,
           style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
         ),
-        textDirection: TextDirection.ltr,
+        textDirection: material.TextDirection.ltr,
       );
       textPainter.layout();
       textPainter.paint(canvas, Offset(pos.dx - textPainter.width / 2, pos.dy + nodeRadius + 6));

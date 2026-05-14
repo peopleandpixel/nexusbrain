@@ -221,7 +221,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         if (_linkSuggestions.isEmpty)
           Padding(padding: const EdgeInsets.all(16), child: Text('notes.noMatchingPages'.tr(), style: const TextStyle(color: Color(0xFF64748B)))),
-        else
+        if (_linkSuggestions.isNotEmpty)
           ..._linkSuggestions.map((page) => ListTile(dense: true, leading: const Icon(Icons.article_outlined, size: 18, color: Color(0xFF8B5CF6)), title: Text(page.title, style: const TextStyle(color: Color(0xFFE2E8F0), fontSize: 14)), onTap: () => _insertPageLink(page))),
       ]),
     );
