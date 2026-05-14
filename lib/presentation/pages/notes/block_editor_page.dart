@@ -220,7 +220,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
       decoration: BoxDecoration(color: const Color(0xFF1A1A2E), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF2D2D44)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))]),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         if (_linkSuggestions.isEmpty)
-          const Padding(padding: EdgeInsets.all(16), child: Text('Keine passenden Seiten', style: TextStyle(color: Color(0xFF64748B))))
+          Padding(padding: const EdgeInsets.all(16), child: Text('notes.noMatchingPages'.tr(), style: const TextStyle(color: Color(0xFF64748B)))),
         else
           ..._linkSuggestions.map((page) => ListTile(dense: true, leading: const Icon(Icons.article_outlined, size: 18, color: Color(0xFF8B5CF6)), title: Text(page.title, style: const TextStyle(color: Color(0xFFE2E8F0), fontSize: 14)), onTap: () => _insertPageLink(page))),
       ]),
@@ -476,7 +476,7 @@ class _BlockItemState extends ConsumerState<_BlockItem> {
                     focusNode: widget.focusNode,
                     style: const TextStyle(color: Color(0xFFE2E8F0), fontSize: 14, height: 1.5),
                     decoration: InputDecoration(
-                      hintText: widget.block.content.isEmpty ? 'Tippe hier... [[Link]] oder TODO' : null,
+                      hintText: widget.block.content.isEmpty ? 'notes.typeHere'.tr() : null,
                       hintStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 13),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.zero,

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nexusbrain/presentation/state/notes_state.dart';
 import 'package:nexusbrain/data/services/webdav_sync_service.dart' show WebDavConfig;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:nexusbrain/presentation/state/theme_state.dart';
+import 'package:nexusbrain/presentation/state/locale_state.dart';
 // webDavSyncProvider is imported from notes_state.dart
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -33,21 +36,21 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            Text('Einstellungen', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
+            Text('settings.title'.tr(), style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w800)),
             const SizedBox(height: 24),
 
-            _Section(title: 'Block-Editor', children: [
-              _SettingsTile(icon: Icons.format_list_bulleted_rounded, title: 'Block-basiertes Editing', subtitle: 'Logseq-ähnlicher Outliner'),
-              _SettingsTile(icon: Icons.link_rounded, title: 'WikiLinks', subtitle: '[[Seiten-Titel]] zum Verlinken'),
-              _SettingsTile(icon: Icons.account_tree_rounded, title: 'Block-Referenzen', subtitle: '((block-id)) für tiefe Verlinkung'),
+            _Section(title: 'settings.blockEditor'.tr(), children: [
+              _SettingsTile(icon: Icons.format_list_bulleted_rounded, title: 'settings.blockBasedEditing'.tr(), subtitle: 'settings.blockBasedEditingSubtitle'.tr()),
+              _SettingsTile(icon: Icons.link_rounded, title: 'settings.wikiLinks'.tr(), subtitle: 'settings.wikiLinksSubtitle'.tr()),
+              _SettingsTile(icon: Icons.account_tree_rounded, title: 'settings.blockReferences'.tr(), subtitle: 'settings.blockReferencesSubtitle'.tr()),
             ]),
             const SizedBox(height: 16),
 
-            _Section(title: 'Cloud-Sync (WebDAV)', children: [
+            _Section(title: 'settings.cloudSync'.tr(), children: [
               _SettingsTile(
                 icon: Icons.cloud_outlined,
-                title: 'WebDAV-Sync',
-                subtitle: _syncStatus.isEmpty ? 'Nextcloud / ownCloud' : _syncStatus,
+                title: 'settings.webDavSync'.tr(),
+                subtitle: _syncStatus.isEmpty ? 'settings.webDavSyncSubtitle'.tr() : _syncStatus,
                 trailing: Switch(
                   value: _syncEnabled,
                   onChanged: (v) => setState(() => _syncEnabled = v),
@@ -58,18 +61,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Column(children: [
-                    TextField(controller: _urlController, decoration: const InputDecoration(hintText: 'https://cloud.example.com/remote.php/dav/files/user', labelText: 'WebDAV URL', isDense: true), style: const TextStyle(fontSize: 13)),
+                    TextField(controller: _urlController, decoration: InputDecoration(hintText: 'settings.webDavUrl'.tr(), labelText: 'settings.webDavUrlLabel'.tr(), isDense: true), style: const TextStyle(fontSize: 13)),
                     const SizedBox(height: 8),
-                    TextField(controller: _userController, decoration: const InputDecoration(hintText: 'Benutzername', labelText: 'Username', isDense: true), style: const TextStyle(fontSize: 13)),
+                    TextField(controller: _userController, decoration: InputDecoration(hintText: 'settings.username'.tr(), labelText: 'settings.username'.tr(), isDense: true), style: const TextStyle(fontSize: 13)),
                     const SizedBox(height: 8),
-                    TextField(controller: _passController, decoration: const InputDecoration(hintText: 'Passwort', labelText: 'Password', isDense: true), obscureText: true, style: const TextStyle(fontSize: 13)),
+                    TextField(controller: _passController, decoration: InputDecoration(hintText: 'settings.password'.tr(), labelText: 'settings.password'.tr(), isDense: true), obscureText: true, style: const TextStyle(fontSize: 13)),
                     const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: _syncNow,
                         icon: const Icon(Icons.sync_rounded, size: 18),
-                        label: const Text('Jetzt synchronisieren'),
+                        label: Text('settings.syncNow'.tr()),
                         style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8B5CF6), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                       ),
                     ),
@@ -79,29 +82,78 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ]),
             const SizedBox(height: 16),
 
-            _Section(title: 'WikiLinks', children: [
+            _Section(title: 'settings.wikiLinks'.tr(), children: [
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text('[[Seiten Titel]]', style: TextStyle(fontFamily: 'monospace', color: Color(0xFF06B6D4), fontSize: 14)),
+                  Text('settings.wikiLinksExample'.tr(), style: const TextStyle(fontFamily: 'monospace', color: Color(0xFF06B6D4), fontSize: 14)),
                   const SizedBox(height: 4),
-                  const Text('Verweise auf andere Seiten erstellen', style: TextStyle(color: Color(0xFF64748B), fontSize: 12)),
+                  Text('settings.wikiLinksExampleDesc'.tr(), style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)),
                   const SizedBox(height: 12),
-                  const Text('[[Seiten Titel|Anzeigetext]]', style: TextStyle(fontFamily: 'monospace', color: Color(0xFF06B6D4), fontSize: 14)),
+                  Text('settings.wikiLinksCustomExample'.tr(), style: const TextStyle(fontFamily: 'monospace', color: Color(0xFF06B6D4), fontSize: 14)),
                   const SizedBox(height: 4),
-                  const Text('Verweis mit benutzerdefiniertem Text', style: TextStyle(color: Color(0xFF64748B), fontSize: 12)),
+                  Text('settings.wikiLinksCustomExampleDesc'.tr(), style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)),
                   const SizedBox(height: 12),
-                  const Text('((block-id))', style: TextStyle(fontFamily: 'monospace', color: Color(0xFF06B6D4), fontSize: 14)),
+                  Text('settings.blockRefExample'.tr(), style: const TextStyle(fontFamily: 'monospace', color: Color(0xFF06B6D4), fontSize: 14)),
                   const SizedBox(height: 4),
-                  const Text('Referenz auf einen bestimmten Block', style: TextStyle(color: Color(0xFF64748B), fontSize: 12)),
+                  Text('settings.blockRefExampleDesc'.tr(), style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)),
                 ]),
               ),
             ]),
             const SizedBox(height: 16),
 
-            _Section(title: 'Über', children: [
-              _SettingsTile(icon: Icons.info_outlined, title: 'NexusBrain', subtitle: 'Version 0.2.0 — Block-Editor MVP'),
-              _SettingsTile(icon: Icons.code_outlined, title: 'Tech Stack', subtitle: 'Flutter + Drift + SQLite'),
+            // Theme selection
+            _Section(title: 'settings.theme'.tr(), children: [
+              _SettingsTile(
+                icon: Icons.brightness_6_rounded,
+                title: 'settings.theme'.tr(),
+                subtitle: 'settings.themeSystem'.tr(),
+                trailing: DropdownButton<AppThemeMode>(
+                  value: ref.watch(themeModeProvider),
+                  underline: const SizedBox(),
+                  items: [
+                    DropdownMenuItem(value: AppThemeMode.light, child: Text('settings.themeLight'.tr())),
+                    DropdownMenuItem(value: AppThemeMode.dark, child: Text('settings.themeDark'.tr())),
+                    DropdownMenuItem(value: AppThemeMode.system, child: Text('settings.themeSystem'.tr())),
+                  ],
+                  onChanged: (mode) {
+                    if (mode != null) ref.read(themeModeProvider.notifier).setTheme(mode);
+                  },
+                ),
+              ),
+            ]),
+            const SizedBox(height: 16),
+
+            // Language selection
+            _Section(title: 'settings.language'.tr(), children: [
+              _SettingsTile(
+                icon: Icons.language_rounded,
+                title: 'settings.language'.tr(),
+                subtitle: context.locale.languageCode == 'de' ? 'Deutsch' : 'English',
+                trailing: DropdownButton<String>(
+                  value: context.locale.languageCode,
+                  underline: const SizedBox(),
+                  items: const [
+                    DropdownMenuItem(value: 'de', child: Text('Deutsch')),
+                    DropdownMenuItem(value: 'en', child: Text('English')),
+                  ],
+                  onChanged: (lang) {
+                    if (lang == 'de') {
+                      context.setLocale(const Locale('de'));
+                      ref.read(localeProvider.notifier).setLocale(const Locale('de'));
+                    } else if (lang == 'en') {
+                      context.setLocale(const Locale('en'));
+                      ref.read(localeProvider.notifier).setLocale(const Locale('en'));
+                    }
+                  },
+                ),
+              ),
+            ]),
+            const SizedBox(height: 16),
+
+            _Section(title: 'settings.about'.tr(), children: [
+              _SettingsTile(icon: Icons.info_outlined, title: 'NexusBrain', subtitle: '${'settings.version'.tr()} — Block-Editor MVP'),
+              _SettingsTile(icon: Icons.code_outlined, title: 'settings.techStack'.tr(), subtitle: 'settings.techStackSubtitle'.tr()),
             ]),
           ],
         ),
@@ -111,7 +163,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   Future<void> _syncNow() async {
     if (_urlController.text.isEmpty || _userController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bitte WebDAV-Zugangsdaten eingeben')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('common.enterCredentials'.tr())));
       return;
     }
     setState(() => _syncStatus = 'Synchronisiere...');

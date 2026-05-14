@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:nexusbrain/presentation/state/notes_state.dart';
 import 'package:nexusbrain/presentation/theme.dart';
 import 'package:nexusbrain/domain/models/page.dart' as domain;
@@ -47,7 +48,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                         const SizedBox(height: 4),
                         pagesAsync.when(
                           data: (pages) => Text(
-                            '${pages.length} Seiten',
+                            'notes.pagesCount'.tr(namedArgs: {'count': pages.length.toString()}),
                             style: theme.textTheme.bodySmall,
                           ).animate().fadeIn(delay: 200.ms),
                           loading: () => const SizedBox.shrink(),
@@ -72,7 +73,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
             child: pagesAsync.when(
               data: (pages) => _buildPagesList(context, pages),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Center(child: Text('Fehler: $error')),
+              error: (error, _) => Center(child: Text('${'common.error'.tr()}: $error')),
             ),
           ),
         ]),
@@ -127,13 +128,13 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Seite löschen?'),
-        content: const Text('Alle Blöcke dieser Seite werden gelöscht.'),
+        title: Text('notes.deletePage'.tr()),
+        content: Text('notes.deletePageContent'.tr()),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Abbrechen')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text('common.cancel'.tr())),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Löschen', style: TextStyle(color: Color(0xFFEF4444))),
+            child: Text('common.delete'.tr(), style: const TextStyle(color: Color(0xFFEF4444))),
           ),
         ],
       ),
@@ -148,18 +149,18 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     return showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Neue Seite'),
+        title: Text('notes.newPage'.tr()),
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(hintText: 'Seitentitel...'),
+          decoration: InputDecoration(hintText: 'notes.newPageTitle'.tr()),
           onSubmitted: (v) => Navigator.pop(ctx, v),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Abbrechen')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('common.cancel'.tr())),
           TextButton(
             onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-            child: const Text('Erstellen'),
+            child: Text('notes.create'.tr()),
           ),
         ],
       ),
@@ -258,12 +259,12 @@ class _SearchBar extends StatelessWidget {
       child: TextField(
         onChanged: onChanged,
         style: const TextStyle(color: Color(0xFFE2E8F0), fontSize: 14),
-        decoration: const InputDecoration(
-          hintText: 'Seiten durchsuchen...',
-          hintStyle: TextStyle(color: Color(0xFF64748B), fontSize: 14),
-          prefixIcon: Icon(Icons.search_rounded, color: Color(0xFF64748B), size: 20),
+        decoration: InputDecoration(
+          hintText: 'notes.searchPages'.tr(),
+          hintStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF64748B), size: 20),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),
     );
@@ -281,12 +282,12 @@ class _EmptyState extends StatelessWidget {
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(width: 80, height: 80, decoration: BoxDecoration(gradient: NexusBrainTheme.glowGradient, borderRadius: BorderRadius.circular(24)), child: const Icon(Icons.article_outlined, size: 40, color: Color(0xFF8B5CF6))),
         const SizedBox(height: 24),
-        Text(hasPages ? 'Keine Treffer' : 'Noch keine Seiten', style: Theme.of(context).textTheme.titleLarge),
+        Text(hasPages ? 'notes.noResults'.tr() : 'notes.noPagesYet'.tr(), style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
-        Text(hasPages ? 'Versuche einen anderen Suchbegriff' : 'Erstelle deine erste Seite mit Blöcken', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B))),
+        Text(hasPages ? 'notes.noResultsSubtitle'.tr() : 'notes.noPagesYetSubtitle'.tr(), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B))),
         if (!hasPages) ...[
           const SizedBox(height: 24),
-          GestureDetector(onTap: onCreate, child: Container(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), decoration: BoxDecoration(gradient: NexusBrainTheme.primaryGradient, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: const Color(0xFF8B5CF6).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))]), child: const Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.add_rounded, color: Colors.white, size: 20), SizedBox(width: 8), Text('Erste Seite erstellen', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))]))),
+          GestureDetector(onTap: onCreate, child: Container(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), decoration: BoxDecoration(gradient: NexusBrainTheme.primaryGradient, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: const Color(0xFF8B5CF6).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))]), child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.add_rounded, color: Colors.white, size: 20), const SizedBox(width: 8), Text('notes.createFirstPage'.tr(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600))]))),
         ],
       ]),
     );

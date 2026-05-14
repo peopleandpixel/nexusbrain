@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:nexusbrain/presentation/state/notes_state.dart';
 import 'package:nexusbrain/presentation/theme.dart';
 import 'package:nexusbrain/domain/models/page.dart' as domain;
@@ -38,7 +39,7 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
         child: pagesAsync.when(
           data: (pages) => _buildGraph(context, pages),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, __) => const Center(child: Text('Fehler beim Laden')),
+          error: (_, __) => Center(child: Text('common.error'.tr())),
         ),
       ),
     );
@@ -60,7 +61,7 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Wissensgraph',
+                      'graph.knowledgeGraph'.tr(),
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         foreground: Paint()
@@ -69,7 +70,7 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${pages.length} Seiten · ${_countUniqueTags(pages)} Tags',
+                      '${'graph.pagesCount'.tr(namedArgs: {'count': pages.length.toString()})} · ${'graph.tagsCount'.tr(namedArgs: {'count': _countUniqueTags(pages).toString()})}',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
@@ -134,9 +135,9 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
             child: const Icon(Icons.account_tree_rounded, size: 50, color: Color(0xFF8B5CF6)),
           ),
           const SizedBox(height: 24),
-          Text('Wissensgraph', style: Theme.of(context).textTheme.headlineSmall),
+          Text('graph.emptyTitle'.tr(), style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 8),
-          Text('Erstelle Seiten und verbinde sie\nmit [[WikiLinks]]', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B))),
+          Text('graph.emptySubtitle'.tr(), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B))),
         ],
       ),
     );
