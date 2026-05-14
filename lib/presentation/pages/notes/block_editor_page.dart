@@ -172,6 +172,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
           onAddAfter: () => _addBlockAfter(blocks[index].id),
           onUndo: () => _undo(blocks[index].id),
           onRedo: () => _redo(blocks[index].id),
+          onClearRedoStack: () => _redoStack.remove(blocks[index].id),
           onSaveUndoState: () => _saveUndoState(blocks[index].id),
           onCycleTaskState: () => _cycleTaskState(blocks[index]),
         );
@@ -299,6 +300,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
     _blockControllers.remove(blockId);
     _blockFocusNodes.remove(blockId);
     _undoStack.remove(blockId);
+    _redoStack.remove(blockId);
     ref.invalidate(currentPageBlocksProvider(widget.page.id));
   }
 
@@ -330,6 +332,7 @@ class _BlockItem extends ConsumerStatefulWidget {
   final VoidCallback onAddAfter;
   final VoidCallback onUndo;
   final VoidCallback onRedo;
+  final VoidCallback onClearRedoStack;
   final VoidCallback onSaveUndoState;
   final VoidCallback onCycleTaskState;
 
@@ -347,6 +350,7 @@ class _BlockItem extends ConsumerStatefulWidget {
     required this.onAddAfter,
     required this.onUndo,
     required this.onRedo,
+    required this.onClearRedoStack,
     required this.onSaveUndoState,
     required this.onCycleTaskState,
   });
@@ -381,7 +385,7 @@ class _BlockItemState extends ConsumerState<_BlockItem> {
     if (widget.focusNode.hasFocus) {
       widget.onSaveUndoState();
       // Clear redo stack on new input
-      _redoStack.remove(widget.block.id);
+      widget.onClearRedoStack();
     }
   }
 
