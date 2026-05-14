@@ -223,7 +223,7 @@ class NexusBrainDatabase extends _$NexusBrainDatabase {
       (select(blocks)..where((b) => b.id.equals(id))).getSingleOrNull();
 
   Future<int> insertBlock(BlocksCompanion block) => into(blocks).insert(block);
-  Future<bool> updateBlock(BlocksCompanion block) => update(blocks).replace(block);
+  Future<bool> updateBlock(BlocksCompanion block) => update(blocks).write(block);
   Future<int> deleteBlock(String id) =>
       (delete(blocks)..where((b) => b.id.equals(id))).go();
 

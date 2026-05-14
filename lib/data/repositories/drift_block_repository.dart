@@ -131,6 +131,10 @@ class DriftBlockRepository {
       orderIndex: Value(block.orderIndex),
       indentLevel: Value(block.indentLevel),
       isCollapsed: Value(block.isCollapsed),
+      taskState: Value(block.taskState),
+      scheduledAt: Value(block.scheduledAt),
+      deadlineAt: Value(block.deadlineAt),
+      completedAt: Value(block.completedAt),
       createdAt: Value(block.createdAt),
       updatedAt: Value(DateTime.now()),
     ));

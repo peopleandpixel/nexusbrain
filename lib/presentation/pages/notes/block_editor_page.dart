@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:nexusbrain/presentation/state/notes_state.dart';
 import 'package:nexusbrain/domain/models/page.dart' as domain;
 import 'package:nexusbrain/domain/models/block.dart';
@@ -118,7 +119,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
             child: Row(children: [
               IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back_rounded)),
               const Spacer(),
-              Text('Block-Editor', style: theme.textTheme.titleSmall),
+              Text('notes.blockEditor'.tr(), style: theme.textTheme.titleSmall),
               const Spacer(),
               const SizedBox(width: 48),
             ]),
@@ -129,7 +130,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
             child: TextField(
               controller: _titleController,
               style: theme.textTheme.headlineSmall,
-              decoration: const InputDecoration(hintText: 'Seitentitel...', hintStyle: TextStyle(color: Color(0xFF64748B)), border: InputBorder.none, contentPadding: EdgeInsets.zero),
+              decoration: InputDecoration(hintText: 'notes.untitled'.tr(), hintStyle: const TextStyle(color: Color(0xFF64748B)), border: InputBorder.none, contentPadding: EdgeInsets.zero),
               onChanged: (value) => _debouncedSaveTitle(value),
             ),
           ),
@@ -140,7 +141,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
             child: blocksAsync.when(
               data: (blocks) => _buildBlockList(blocks),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (_, __) => const Center(child: Text('Fehler beim Laden')),
+              error: (_, __) => Center(child: Text('notes.loadError'.tr())),
             ),
           ),
           if (_showLinkSuggestions && _linkSuggestions.isNotEmpty)
@@ -185,14 +186,14 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         const Icon(Icons.format_list_bulleted_rounded, size: 48, color: Color(0xFF64748B)),
         const SizedBox(height: 16),
-        Text('Noch keine Blöcke', style: Theme.of(context).textTheme.titleMedium),
+        Text('notes.emptyTitle'.tr(), style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        Text('Klicke hier oder drücke Enter zum Starten', style: Theme.of(context).textTheme.bodySmall),
+        Text('notes.emptySubtitle'.tr(), style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 16),
         ElevatedButton.icon(
           onPressed: _addRootBlock,
           icon: const Icon(Icons.add_rounded, size: 18),
-          label: const Text('Block hinzufügen'),
+          label: Text('notes.addBlock'.tr()),
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8B5CF6), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         ),
       ]),
@@ -207,7 +208,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(color: const Color(0xFF1A1A2E).withValues(alpha: 0.5), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF2D2D44).withValues(alpha: 0.5))),
-          child: const Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.add_rounded, size: 18, color: Color(0xFF8B5CF6)), SizedBox(width: 8), Text('Block hinzufügen', style: TextStyle(color: Color(0xFF8B5CF6), fontSize: 13))]),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.add_rounded, size: 18, color: Color(0xFF8B5CF6)), const SizedBox(width: 8), Text('notes.addBlock'.tr(), style: const TextStyle(color: Color(0xFF8B5CF6), fontSize: 13))]),
         ),
       ),
     );
@@ -241,9 +242,12 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
   final Map<String, Timer?> _blockDebounces = {};
   void _debouncedSaveBlock(String blockId, String content) {
     _blockDebounces[blockId]?.cancel();
-    _blockDebounces[blockId] = Timer(const Duration(milliseconds: 300), () {
+    _blockDebounces[blockId] = Timer(const Duration(milliseconds: 300), () async {
       if (mounted && _blockControllers[blockId]?.text == content) {
-        ref.read(blockRepositoryProvider).updateBlock(Block(id: blockId, pageId: widget.page.id, content: content, createdAt: DateTime.now(), updatedAt: DateTime.now()));
+        final existing = await ref.read(blockRepositoryProvider).getBlockById(blockId);
+        if (existing != null) {
+          ref.read(blockRepositoryProvider).updateBlock(existing.copyWith(content: content));
+        }
       }
     });
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'notes/notes_page.dart';
 import 'graph/graph_page.dart';
 import 'settings/settings_page.dart';
@@ -45,19 +46,19 @@ class _HomePageState extends ConsumerState<HomePage> {
               children: [
                 _NavItem(
                   icon: Icons.edit_note_rounded,
-                  label: 'Notizen',
+                  label: 'notes.title'.tr(),
                   isActive: _currentIndex == 0,
                   onTap: () => setState(() => _currentIndex = 0),
                 ),
                 _NavItem(
                   icon: Icons.account_tree_rounded,
-                  label: 'Graph',
+                  label: 'graph.title'.tr(),
                   isActive: _currentIndex == 1,
                   onTap: () => setState(() => _currentIndex = 1),
                 ),
                 _NavItem(
                   icon: Icons.settings_rounded,
-                  label: 'Settings',
+                  label: 'settings.title'.tr(),
                   isActive: _currentIndex == 2,
                   onTap: () => setState(() => _currentIndex = 2),
                 ),

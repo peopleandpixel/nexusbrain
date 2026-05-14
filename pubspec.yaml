@@ -36,9 +36,15 @@ dependencies:
 
   # UUID
   uuid: ^4.2.1
-  
+
   # Crypto (for sync hashing)
   crypto: ^3.0.3
+
+  # i18n
+  easy_localization: ^3.0.3
+
+  # Persistence
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -55,3 +61,4 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/translations/

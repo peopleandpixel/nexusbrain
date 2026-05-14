@@ -106,6 +106,103 @@ class NexusBrainTheme {
     ),
   );
 
+  // Light theme colors
+  static const _lightSurface = Color(0xFFF8FAFC);
+  static const _lightCard = Color(0xFFFFFFFF);
+  static const _lightCardHover = Color(0xFFF1F5F9);
+  static const _lightText = Color(0xFF1E293B);
+  static const _lightTextMuted = Color(0xFF64748B);
+  static const _lightBorder = Color(0xFFE2E8F0);
+
+  static ThemeData get light => ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.light,
+    colorScheme: const ColorScheme.light(
+      primary: _primary,
+      secondary: _secondary,
+      tertiary: _accent,
+      surface: _lightSurface,
+      onSurface: _lightText,
+      error: _danger,
+    ),
+    scaffoldBackgroundColor: _lightSurface,
+    cardColor: _lightCard,
+    dividerColor: _lightBorder,
+    textTheme: GoogleFonts.interTextTheme(const TextTheme(
+      headlineLarge: TextStyle(color: _lightText, fontWeight: FontWeight.w700, fontSize: 32),
+      headlineMedium: TextStyle(color: _lightText, fontWeight: FontWeight.w600, fontSize: 24),
+      headlineSmall: TextStyle(color: _lightText, fontWeight: FontWeight.w600, fontSize: 20),
+      titleLarge: TextStyle(color: _lightText, fontWeight: FontWeight.w600, fontSize: 18),
+      titleMedium: TextStyle(color: _lightText, fontWeight: FontWeight.w500, fontSize: 16),
+      titleSmall: TextStyle(color: _lightTextMuted, fontWeight: FontWeight.w500, fontSize: 14),
+      bodyLarge: TextStyle(color: _lightText, fontSize: 16),
+      bodyMedium: TextStyle(color: _lightText, fontSize: 14),
+      bodySmall: TextStyle(color: _lightTextMuted, fontSize: 12),
+      labelLarge: TextStyle(color: _lightText, fontWeight: FontWeight.w500, fontSize: 14),
+      labelMedium: TextStyle(color: _lightTextMuted, fontSize: 12),
+      labelSmall: TextStyle(color: _lightTextMuted, fontSize: 10),
+    )),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      centerTitle: false,
+      titleTextStyle: TextStyle(color: _lightText, fontSize: 24, fontWeight: FontWeight.w700),
+      iconTheme: IconThemeData(color: _lightText),
+    ),
+    cardTheme: CardThemeData(
+      color: _lightCard,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: _lightBorder, width: 1),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: _lightCard,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _lightBorder),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _lightBorder),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: _primary, width: 2),
+      ),
+      hintStyle: const TextStyle(color: _lightTextMuted),
+      labelStyle: const TextStyle(color: _lightTextMuted),
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: _primary,
+      foregroundColor: Colors.white,
+      elevation: 8,
+      shape: CircleBorder(),
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: _lightCard,
+      selectedItemColor: _primary,
+      unselectedItemColor: _lightTextMuted,
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: _lightCardHover,
+      selectedColor: _primary.withValues(alpha: 0.3),
+      labelStyle: const TextStyle(color: _lightText, fontSize: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      side: BorderSide.none,
+    ),
+    iconTheme: const IconThemeData(color: _lightTextMuted, size: 20),
+    dialogTheme: DialogThemeData(
+      backgroundColor: _lightCard,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    ),
+  );
+
   // Gradient presets
   static const primaryGradient = LinearGradient(
     colors: [_primary, _secondary],
