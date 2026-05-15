@@ -13,16 +13,12 @@ dependencies:
   # State Management
   flutter_riverpod: ^2.4.9
 
-  # Database (drift = web + mobile + desktop)
-  drift: ^2.33.0
-  drift_flutter: ^0.3.0
-  
-  # For drift native support
-  sqlite3_flutter_libs: ^0.6.0
-  path: ^1.9.0
+  # Database (Isar NoSQL - community fork)
+  isar_community: ^3.0.0
+  isar_community_flutter_libs: ^3.0.0
 
-  # Code Generation
-  json_annotation: ^4.9.0
+  path: ^1.9.0
+  path_provider: ^2.1.1
 
   # UI
   flutter_markdown: ^0.6.18
@@ -32,7 +28,6 @@ dependencies:
 
   # File System
   file_picker: ^6.1.1
-  path_provider: ^2.1.1
 
   # UUID
   uuid: ^4.2.1
@@ -47,14 +42,11 @@ dependencies:
   shared_preferences: ^2.2.2
 
 dev_dependencies:
+  isar_community_generator: ^3.0.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-
-  # Code Generation
-  build_runner: ^2.4.7
-  json_serializable: ^6.7.1
-  drift_dev: ^2.33.0
+  build_runner: any
 
 flutter:
   uses-material-design: true

@@ -1,30 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nexusbrain/core/database/database.dart' as db;
-import 'package:nexusbrain/data/repositories/drift_block_repository.dart';
-import 'package:nexusbrain/data/services/webdav_sync_service.dart';
-import 'package:nexusbrain/domain/models/page.dart' as domain;
-import 'package:nexusbrain/domain/models/block.dart';
+import '../../data/repositories/isar_block_repository.dart';
+import '../../data/repositories/isar_task_repository.dart';
+import '../../domain/models/page.dart' as domain;
+import '../../domain/models/block.dart';
 
-// Database provider
-final databaseProvider = Provider<db.NexusBrainDatabase>((ref) {
-  final database = db.NexusBrainDatabase();
-  ref.onDispose(() => database.close());
-  return database;
-});
-
-// Repository provider
-final blockRepositoryProvider = Provider<DriftBlockRepository>((ref) {
-  return DriftBlockRepository(ref.read(databaseProvider));
+final blockRepositoryProvider = Provider<IsarBlockRepository>((ref) {
+  return IsarBlockRepository();
 });
 
 // Pages list
-final pagesProvider = AsyncNotifierProvider<PagesNotifier, List<domain.MdBombPage>>(() {
+final pagesProvider =
+    AsyncNotifierProvider<PagesNotifier, List<domain.Page>>(() {
   return PagesNotifier();
 });
 
-class PagesNotifier extends AsyncNotifier<List<domain.MdBombPage>> {
+class PagesNotifier extends AsyncNotifier<List<domain.Page>> {
   @override
-  Future<List<domain.MdBombPage>> build() async {
+  Future<List<domain.Page>> build() async {
     final repo = ref.read(blockRepositoryProvider);
     return repo.getAllPages();
   }
@@ -37,7 +29,7 @@ class PagesNotifier extends AsyncNotifier<List<domain.MdBombPage>> {
     });
   }
 
-  Future<domain.MdBombPage> createPage(String title) async {
+  Future<domain.Page> createPage(String title) async {
     final repo = ref.read(blockRepositoryProvider);
     final page = await repo.createPage(title);
     await refresh();
@@ -52,7 +44,8 @@ class PagesNotifier extends AsyncNotifier<List<domain.MdBombPage>> {
 }
 
 // Current page blocks
-final currentPageBlocksProvider = FutureProvider.family<List<Block>, String>((ref, pageId) async {
+final currentPageBlocksProvider =
+    FutureProvider.family<List<Block>, String>((ref, pageId) async {
   final repo = ref.read(blockRepositoryProvider);
   return repo.getBlockTreeForPage(pageId);
 });
@@ -60,28 +53,16 @@ final currentPageBlocksProvider = FutureProvider.family<List<Block>, String>((re
 // Search
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-final searchResultsProvider = FutureProvider<List<domain.MdBombPage>>((ref) async {
+final searchResultsProvider = FutureProvider<List<domain.Page>>((ref) async {
   final query = ref.watch(searchQueryProvider);
   if (query.trim().isEmpty) return [];
   final repo = ref.read(blockRepositoryProvider);
   return repo.searchPages(query);
 });
 
-// WebDAV Sync
-final webDavSyncProvider = Provider.family<WebDavSyncService, WebDavConfig>((ref, config) {
-  return WebDavSyncService(
-    repo: ref.read(blockRepositoryProvider),
-    baseUrl: config.baseUrl,
-    username: config.username,
-    password: config.password,
-    remotePath: config.remotePath,
-  );
-});
-
-
 // Task repository
 final taskRepositoryProvider = Provider<TaskRepository>((ref) {
-  return TaskRepository(ref.read(databaseProvider), ref.read(blockRepositoryProvider));
+  return TaskRepository(ref.read(blockRepositoryProvider));
 });
 
 // Open tasks

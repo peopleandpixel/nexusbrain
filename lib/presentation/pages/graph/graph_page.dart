@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:nexusbrain/presentation/state/notes_state.dart';
 import 'package:nexusbrain/presentation/theme.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:nexusbrain/domain/models/page.dart' as domain;
 
 class GraphPage extends ConsumerStatefulWidget {
@@ -14,14 +13,18 @@ class GraphPage extends ConsumerStatefulWidget {
   ConsumerState<GraphPage> createState() => _GraphPageState();
 }
 
-class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProviderStateMixin {
+class _GraphPageState extends ConsumerState<GraphPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  final TransformationController _transformController = TransformationController();
+  final TransformationController _transformController =
+      TransformationController();
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 20))..repeat();
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(seconds: 20))
+      ..repeat();
   }
 
   @override
@@ -46,7 +49,7 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
     );
   }
 
-  Widget _buildGraph(BuildContext context, List<domain.MdBombPage> pages) {
+  Widget _buildGraph(BuildContext context, List<domain.Page> pages) {
     if (pages.isEmpty) {
       return _buildEmptyState(context);
     }
@@ -63,11 +66,14 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
                   children: [
                     Text(
                       'graph.knowledgeGraph'.tr(),
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        foreground: Paint()
-                          ..shader = NexusBrainTheme.primaryGradient.createShader(const Rect.fromLTWH(0, 0, 200, 40)),
-                      ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                foreground: Paint()
+                                  ..shader =
+                                      NexusBrainTheme.primaryGradient.createShader(
+                                          const Rect.fromLTWH(0, 0, 200, 40)),
+                              ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -89,7 +95,10 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
                       icon: const Icon(Icons.remove_rounded, size: 18),
                       onPressed: () => _zoom(0.8),
                     ),
-                    Container(width: 1, height: 20, color: const Color(0xFF2D2D44)),
+                    Container(
+                        width: 1,
+                        height: 20,
+                        color: const Color(0xFF2D2D44)),
                     IconButton(
                       icon: const Icon(Icons.add_rounded, size: 18),
                       onPressed: () => _zoom(1.25),
@@ -131,14 +140,22 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 100, height: 100,
-            decoration: BoxDecoration(gradient: NexusBrainTheme.glowGradient, borderRadius: BorderRadius.circular(30)),
-            child: const Icon(Icons.account_tree_rounded, size: 50, color: Color(0xFF8B5CF6)),
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+                gradient: NexusBrainTheme.glowGradient,
+                borderRadius: BorderRadius.circular(30)),
+            child: const Icon(Icons.account_tree_rounded,
+                size: 50, color: Color(0xFF8B5CF6)),
           ),
           const SizedBox(height: 24),
-          Text('graph.emptyTitle'.tr(), style: Theme.of(context).textTheme.headlineSmall),
+          Text('graph.emptyTitle'.tr(),
+              style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 8),
-          Text('graph.emptySubtitle'.tr(), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B))),
+          Text('graph.emptySubtitle'.tr(),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: const Color(0xFF64748B))),
         ],
       ),
     );
@@ -150,13 +167,13 @@ class _GraphPageState extends ConsumerState<GraphPage> with SingleTickerProvider
     _transformController.value = matrix;
   }
 
-  int _countUniqueTags(List<domain.MdBombPage> pages) {
-    return pages.expand((p) => p.tags).toSet().length;
+  int _countUniqueTags(List<domain.Page> pages) {
+    return pages.expand((p) => p.tags.toList()).toSet().length;
   }
 }
 
 class _GraphPainter extends CustomPainter {
-  final List<domain.MdBombPage> pages;
+  final List<domain.Page> pages;
   final double animationValue;
 
   _GraphPainter({required this.pages, required this.animationValue});
@@ -173,16 +190,18 @@ class _GraphPainter extends CustomPainter {
       final r = radius * (0.6 + random.nextDouble() * 0.4);
       final x = center.dx + r * cos(angle);
       final y = center.dy + r * sin(angle);
-      nodePositions[pages[i].id] = Offset(x, y);
+      nodePositions[pages[i].pageId] = Offset(x, y);
     }
 
     for (int i = 0; i < pages.length; i++) {
       for (int j = i + 1; j < pages.length; j++) {
-        final sharedTags = pages[i].tags.toSet().intersection(pages[j].tags.toSet());
+        final sharedTags =
+            pages[i].tags.toSet().intersection(pages[j].tags.toSet());
         if (sharedTags.isNotEmpty) {
-          final p1 = nodePositions[pages[i].id]!;
-          final p2 = nodePositions[pages[j].id]!;
-          final strength = sharedTags.length / max(pages[i].tags.length, pages[j].tags.length);
+          final p1 = nodePositions[pages[i].pageId]!;
+          final p2 = nodePositions[pages[j].pageId]!;
+          final strength = sharedTags.length /
+              max(pages[i].tags.length, pages[j].tags.length);
 
           final linePaint = Paint()
             ..color = const Color(0xFF8B5CF6).withValues(alpha: 0.1 + strength * 0.3)
@@ -195,7 +214,7 @@ class _GraphPainter extends CustomPainter {
     }
 
     for (final page in pages) {
-      final pos = nodePositions[page.id]!;
+      final pos = nodePositions[page.pageId]!;
       final double nodeRadius = 8 + min(page.tags.length * 2.0, 20.0);
 
       final glowPaint = Paint()
@@ -204,7 +223,8 @@ class _GraphPainter extends CustomPainter {
       canvas.drawCircle(pos, nodeRadius + 8, glowPaint);
 
       final bgPaint = Paint()
-        ..shader = NexusBrainTheme.primaryGradient.createShader(Rect.fromCircle(center: pos, radius: nodeRadius));
+        ..shader = NexusBrainTheme.primaryGradient
+            .createShader(Rect.fromCircle(center: pos, radius: nodeRadius));
       canvas.drawCircle(pos, nodeRadius, bgPaint);
 
       final borderPaint = Paint()
@@ -215,13 +235,16 @@ class _GraphPainter extends CustomPainter {
 
       final textPainter = TextPainter(
         text: TextSpan(
-          text: page.title.length > 20 ? '${page.title.substring(0, 20)}...' : page.title,
-          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
+          text: page.title.length > 20
+              ? '${page.title.substring(0, 20)}...'
+              : page.title,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
         ),
-        textDirection: material.TextDirection.ltr,
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(pos.dx - textPainter.width / 2, pos.dy + nodeRadius + 6));
+      textPainter.paint(
+          canvas, Offset(pos.dx - textPainter.width / 2, pos.dy + nodeRadius + 6));
     }
   }
 

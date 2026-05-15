@@ -1,51 +1,30 @@
-class MdBombPage {
-  final String id;
-  final String title;
-  final String? filePath;
-  final bool isJournal;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> tags;
+import 'package:isar_community/isar.dart';
+import 'block.dart';
+import 'tag.dart';
 
-  const MdBombPage({
-    required this.id,
+part 'page.g.dart';
+
+@Collection()
+class Page {
+  Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
+  late String pageId;
+
+  late String title;
+  String? filePath;
+  bool isJournal = false;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  final tags = IsarLinks<Tag>();
+
+  Page({
+    required this.pageId,
     required this.title,
     this.filePath,
     this.isJournal = false,
-    required this.createdAt,
-    required this.updatedAt,
-    this.tags = const [],
+    this.createdAt,
+    this.updatedAt,
   });
-
-  MdBombPage copyWith({
-    String? id,
-    String? title,
-    String? filePath,
-    bool? isJournal,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    List<String>? tags,
-  }) {
-    return MdBombPage(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      filePath: filePath ?? this.filePath,
-      isJournal: isJournal ?? this.isJournal,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      tags: tags ?? this.tags,
-    );
-  }
-
-  factory MdBombPage.fromDrift(dynamic driftPage, List<String> tagNames) {
-    return MdBombPage(
-      id: driftPage.id as String,
-      title: driftPage.title as String,
-      filePath: driftPage.filePath as String?,
-      isJournal: driftPage.isJournal as bool,
-      createdAt: driftPage.createdAt as DateTime,
-      updatedAt: driftPage.updatedAt as DateTime,
-      tags: tagNames,
-    );
-  }
 }

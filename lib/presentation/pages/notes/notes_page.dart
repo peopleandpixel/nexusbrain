@@ -40,9 +40,8 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                           style: theme.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.w800,
                             foreground: Paint()
-                              ..shader = NexusBrainTheme.primaryGradient.createShader(
-                                const Rect.fromLTWH(0, 0, 200, 40),
-                              ),
+                              ..shader = NexusBrainTheme.primaryGradient
+                                  .createShader(const Rect.fromLTWH(0, 0, 200, 40)),
                           ),
                         ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1),
                         const SizedBox(height: 4),
@@ -81,13 +80,12 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     );
   }
 
-  Widget _buildPagesList(BuildContext context, List<domain.MdBombPage> pages) {
+  Widget _buildPagesList(BuildContext context, List<domain.Page> pages) {
     final filtered = _searchQuery.isEmpty
         ? pages
         : pages.where((p) {
             final q = _searchQuery.toLowerCase();
-            return p.title.toLowerCase().contains(q) ||
-                p.tags.any((t) => t.toLowerCase().contains(q));
+            return p.title.toLowerCase().contains(q);
           }).toList();
 
     if (filtered.isEmpty) {
@@ -103,7 +101,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
           child: _PageCard(
             page: filtered[index],
             onTap: () => _openPage(context, filtered[index]),
-            onDelete: () => _deletePage(filtered[index].id),
+            onDelete: () => _deletePage(filtered[index].pageId),
           ),
         );
       },
@@ -117,14 +115,14 @@ class _NotesPageState extends ConsumerState<NotesPage> {
     }
   }
 
-  void _openPage(BuildContext context, domain.MdBombPage page) {
+  void _openPage(BuildContext context, domain.Page page) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => BlockEditorPage(page: page)),
     );
   }
 
-  void _deletePage(String id) async {
+  void _deletePage(String pageId) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -140,7 +138,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
       ),
     );
     if (confirmed == true) {
-      await ref.read(pagesProvider.notifier).deletePage(id);
+      await ref.read(pagesProvider.notifier).deletePage(pageId);
     }
   }
 
@@ -169,7 +167,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
 }
 
 class _PageCard extends StatelessWidget {
-  final domain.MdBombPage page;
+  final domain.Page page;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
@@ -192,20 +190,17 @@ class _PageCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Expanded(child: Text(page.title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis)),
+              Expanded(
+                child: Text(page.title,
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
+              ),
               const SizedBox(width: 8),
-              Text(_formatDate(page.updatedAt), style: theme.textTheme.labelSmall),
+              Text(_formatDate(page.updatedAt ?? DateTime.now()), style: theme.textTheme.labelSmall),
               const SizedBox(width: 4),
               GestureDetector(onTap: onDelete, child: const Icon(Icons.close_rounded, size: 16, color: Color(0xFF64748B))),
             ]),
-            if (page.tags.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Wrap(spacing: 6, runSpacing: 6, children: page.tags.map((tag) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: const Color(0xFF8B5CF6).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6), border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.2))),
-                child: Text(tag, style: const TextStyle(color: Color(0xFF8B5CF6), fontSize: 10, fontWeight: FontWeight.w500)),
-              )).toList()),
-            ],
           ],
         ),
       ),
@@ -231,7 +226,8 @@ class _GlowButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48, height: 48,
+        width: 48,
+        height: 48,
         decoration: BoxDecoration(
           gradient: NexusBrainTheme.primaryGradient,
           borderRadius: BorderRadius.circular(16),
@@ -280,14 +276,38 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(width: 80, height: 80, decoration: BoxDecoration(gradient: NexusBrainTheme.glowGradient, borderRadius: BorderRadius.circular(24)), child: const Icon(Icons.article_outlined, size: 40, color: Color(0xFF8B5CF6))),
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(gradient: NexusBrainTheme.glowGradient, borderRadius: BorderRadius.circular(24)),
+          child: const Icon(Icons.article_outlined, size: 40, color: Color(0xFF8B5CF6)),
+        ),
         const SizedBox(height: 24),
         Text(hasPages ? 'notes.noResults'.tr() : 'notes.noPagesYet'.tr(), style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
-        Text(hasPages ? 'notes.noResultsSubtitle'.tr() : 'notes.noPagesYetSubtitle'.tr(), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B))),
+        Text(
+          hasPages ? 'notes.noResultsSubtitle'.tr() : 'notes.noPagesYetSubtitle'.tr(),
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B)),
+        ),
         if (!hasPages) ...[
           const SizedBox(height: 24),
-          GestureDetector(onTap: onCreate, child: Container(padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), decoration: BoxDecoration(gradient: NexusBrainTheme.primaryGradient, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: const Color(0xFF8B5CF6).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))]), child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.add_rounded, color: Colors.white, size: 20), const SizedBox(width: 8), Text('notes.createFirstPage'.tr(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600))]))),
+          GestureDetector(
+            onTap: onCreate,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              decoration: BoxDecoration(
+                gradient: NexusBrainTheme.primaryGradient,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [BoxShadow(color: const Color(0xFF8B5CF6).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
+              ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                const Icon(Icons.add_rounded, color: Colors.white, size: 20),
+                const SizedBox(width: 8),
+                Text('notes.createFirstPage'.tr(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              ]),
+            ),
+          ),
         ],
       ]),
     );

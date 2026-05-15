@@ -8,7 +8,7 @@ import 'package:nexusbrain/domain/models/page.dart' as domain;
 import 'package:nexusbrain/domain/models/block.dart';
 
 class BlockEditorPage extends ConsumerStatefulWidget {
-  final domain.MdBombPage page;
+  final domain.Page page;
   const BlockEditorPage({super.key, required this.page});
 
   @override
@@ -24,7 +24,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
   String? _editingBlockId;
 
   bool _showLinkSuggestions = false;
-  final List<domain.MdBombPage> _linkSuggestions = [];
+  final List<domain.Page> _linkSuggestions = [];
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
     return _blockControllers[blockId]!;
   }
 
-  void _insertPageLink(domain.MdBombPage targetPage) {
+  void _insertPageLink(domain.Page targetPage) {
     if (_editingBlockId == null) return;
     final controller = _blockControllers[_editingBlockId]!;
     final text = controller.text;
@@ -108,7 +108,7 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final blocksAsync = ref.watch(currentPageBlocksProvider(widget.page.id));
+    final blocksAsync = ref.watch(currentPageBlocksProvider(widget.page.pageId));
 
     return Scaffold(
       body: SafeArea(
@@ -160,21 +160,21 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
       itemBuilder: (context, index) {
         if (index == blocks.length) return _buildAddBlockButton();
         return _BlockItem(
-          key: ValueKey(blocks[index].id),
+          key: ValueKey(blocks[index].blockId),
           block: blocks[index],
-          controller: _getBlockController(blocks[index].id, blocks[index].content),
-          focusNode: _blockFocusNodes[blocks[index].id] ?? FocusNode(),
+          controller: _getBlockController(blocks[index].blockId, blocks[index].content),
+          focusNode: _blockFocusNodes[blocks[index].blockId] ?? FocusNode(),
           onEditingChanged: (blockId) => setState(() => _editingBlockId = blockId),
           onContentChanged: (blockId, content) => _debouncedSaveBlock(blockId, content),
-          onIndent: () => _indentBlock(blocks[index].id),
-          onOutdent: () => _outdentBlock(blocks[index].id),
-          onDelete: () => _deleteBlock(blocks[index].id, blocks[index]),
-          onAddChild: () => _addChildBlock(blocks[index].id),
-          onAddAfter: () => _addBlockAfter(blocks[index].id),
-          onUndo: () => _undo(blocks[index].id),
-          onRedo: () => _redo(blocks[index].id),
-          onClearRedoStack: () => _redoStack.remove(blocks[index].id),
-          onSaveUndoState: () => _saveUndoState(blocks[index].id),
+          onIndent: () => _indentBlock(blocks[index].blockId),
+          onOutdent: () => _outdentBlock(blocks[index].blockId),
+          onDelete: () => _deleteBlock(blocks[index].blockId, blocks[index]),
+          onAddChild: () => _addChildBlock(blocks[index].blockId),
+          onAddAfter: () => _addBlockAfter(blocks[index].blockId),
+          onUndo: () => _undo(blocks[index].blockId),
+          onRedo: () => _redo(blocks[index].blockId),
+          onClearRedoStack: () => _redoStack.remove(blocks[index].blockId),
+          onSaveUndoState: () => _saveUndoState(blocks[index].blockId),
           onCycleTaskState: () => _cycleTaskState(blocks[index]),
         );
       },
@@ -234,7 +234,9 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
     _titleDebounce?.cancel();
     _titleDebounce = Timer(const Duration(milliseconds: 500), () {
       if (mounted && _titleController.text == title) {
-        ref.read(blockRepositoryProvider).updatePage(widget.page.copyWith(title: title));
+        final updatedPage = widget.page;
+        updatedPage.title = title;
+        ref.read(blockRepositoryProvider).updatePage(updatedPage);
       }
     });
   }
@@ -244,57 +246,61 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
     _blockDebounces[blockId]?.cancel();
     _blockDebounces[blockId] = Timer(const Duration(milliseconds: 300), () async {
       if (mounted && _blockControllers[blockId]?.text == content) {
-        final existing = await ref.read(blockRepositoryProvider).getBlockById(blockId);
+        final existing = await ref.read(blockRepositoryProvider).getBlockByBlockId(blockId);
         if (existing != null) {
-          ref.read(blockRepositoryProvider).updateBlock(existing.copyWith(content: content));
+          existing.content = content;
+          ref.read(blockRepositoryProvider).updateBlock(existing);
         }
       }
     });
   }
 
   void _addRootBlock() async {
-    await ref.read(blockRepositoryProvider).createBlock(widget.page.id);
-    ref.invalidate(currentPageBlocksProvider(widget.page.id));
+    await ref.read(blockRepositoryProvider).createBlock(widget.page.pageId);
+    ref.invalidate(currentPageBlocksProvider(widget.page.pageId));
   }
 
   void _addChildBlock(String parentId) async {
-    final parent = await ref.read(blockRepositoryProvider).getBlockById(parentId);
+    final parent = await ref.read(blockRepositoryProvider).getBlockByBlockId(parentId);
     if (parent != null) {
-      await ref.read(blockRepositoryProvider).createBlock(widget.page.id, parentId: parentId, indentLevel: parent.indentLevel + 1);
-      ref.invalidate(currentPageBlocksProvider(widget.page.id));
+      await ref.read(blockRepositoryProvider).createBlock(widget.page.pageId, parentId: parentId, indentLevel: parent.indentLevel + 1);
+      ref.invalidate(currentPageBlocksProvider(widget.page.pageId));
     }
   }
 
   void _addBlockAfter(String blockId) async {
-    final block = await ref.read(blockRepositoryProvider).getBlockById(blockId);
+    final block = await ref.read(blockRepositoryProvider).getBlockByBlockId(blockId);
     if (block != null) {
-      await ref.read(blockRepositoryProvider).createBlock(widget.page.id, orderIndex: block.orderIndex + 1);
-      ref.invalidate(currentPageBlocksProvider(widget.page.id));
+      await ref.read(blockRepositoryProvider).createBlock(widget.page.pageId, orderIndex: block.orderIndex + 1);
+      ref.invalidate(currentPageBlocksProvider(widget.page.pageId));
     }
   }
 
   void _indentBlock(String blockId) async {
-    final block = await ref.read(blockRepositoryProvider).getBlockById(blockId);
+    final block = await ref.read(blockRepositoryProvider).getBlockByBlockId(blockId);
     if (block != null && block.indentLevel < 5) {
-      await ref.read(blockRepositoryProvider).updateBlock(block.copyWith(indentLevel: block.indentLevel + 1));
-      ref.invalidate(currentPageBlocksProvider(widget.page.id));
+      block.indentLevel = block.indentLevel + 1;
+      await ref.read(blockRepositoryProvider).updateBlock(block);
+      ref.invalidate(currentPageBlocksProvider(widget.page.pageId));
     }
   }
 
   void _outdentBlock(String blockId) async {
-    final block = await ref.read(blockRepositoryProvider).getBlockById(blockId);
+    final block = await ref.read(blockRepositoryProvider).getBlockByBlockId(blockId);
     if (block != null && block.indentLevel > 0) {
-      await ref.read(blockRepositoryProvider).updateBlock(block.copyWith(indentLevel: block.indentLevel - 1));
-      ref.invalidate(currentPageBlocksProvider(widget.page.id));
+      block.indentLevel = block.indentLevel - 1;
+      await ref.read(blockRepositoryProvider).updateBlock(block);
+      ref.invalidate(currentPageBlocksProvider(widget.page.pageId));
     }
   }
 
   void _deleteBlock(String blockId, Block block) async {
     // Don't delete if it's the last block on the page
-    final allBlocks = await ref.read(blockRepositoryProvider).getBlocksForPage(widget.page.id);
+    final allBlocks = await ref.read(blockRepositoryProvider).getBlocksForPage(widget.page.pageId);
     if (allBlocks.length <= 1) {
       // Just clear the content instead
-      await ref.read(blockRepositoryProvider).updateBlock(block.copyWith(content: ''));
+      block.content = '';
+      await ref.read(blockRepositoryProvider).updateBlock(block);
       return;
     }
 
@@ -305,13 +311,13 @@ class _BlockEditorPageState extends ConsumerState<BlockEditorPage> {
     _blockFocusNodes.remove(blockId);
     _undoStack.remove(blockId);
     _redoStack.remove(blockId);
-    ref.invalidate(currentPageBlocksProvider(widget.page.id));
+    ref.invalidate(currentPageBlocksProvider(widget.page.pageId));
   }
 
   void _cycleTaskState(Block block) async {
     final repo = ref.read(taskRepositoryProvider);
-    await repo.cycleTaskState(block.id);
-    ref.invalidate(currentPageBlocksProvider(widget.page.id));
+    await repo.cycleTaskState(block.blockId);
+    ref.invalidate(currentPageBlocksProvider(widget.page.pageId));
   }
 }
 
@@ -484,8 +490,8 @@ class _BlockItemState extends ConsumerState<_BlockItem> {
                     ),
                     maxLines: null,
                     textInputAction: TextInputAction.newline,
-                    onTap: () => widget.onEditingChanged(widget.block.id),
-                    onChanged: (value) => widget.onContentChanged(widget.block.id, value),
+                    onTap: () => widget.onEditingChanged(widget.block.blockId),
+                    onChanged: (value) => widget.onContentChanged(widget.block.blockId, value),
                   ),
                 ),
                 // Action bar (visible on focus or hover)
@@ -585,7 +591,7 @@ class _BlockItemState extends ConsumerState<_BlockItem> {
 
   void _convertToTask() async {
     final repo = ref.read(taskRepositoryProvider);
-    await repo.updateTaskState(widget.block.id, 'TODO');
+    await repo.updateTaskState(widget.block.blockId, 'TODO');
     ref.invalidate(currentPageBlocksProvider(widget.block.pageId));
   }
 }
