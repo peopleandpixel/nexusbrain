@@ -1,15 +1,16 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+part 'theme_state.g.dart';
 
 enum AppThemeMode { light, dark, system }
 
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, AppThemeMode>((ref) {
-  return ThemeModeNotifier();
-});
-
-class ThemeModeNotifier extends StateNotifier<AppThemeMode> {
-  ThemeModeNotifier() : super(AppThemeMode.system) {
+@riverpod
+class ThemeMode extends _$ThemeMode {
+  @override
+  AppThemeMode build() {
     _load();
+    return AppThemeMode.system;
   }
 
   static const _key = 'theme_mode';

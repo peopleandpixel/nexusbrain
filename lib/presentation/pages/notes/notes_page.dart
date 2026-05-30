@@ -1,11 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:nexusbrain/presentation/state/notes_state.dart';
-import 'package:nexusbrain/presentation/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nexusbrain/domain/models/page.dart' as domain;
 import 'package:nexusbrain/presentation/pages/notes/block_editor_page.dart';
+import 'package:nexusbrain/presentation/state/notes_state.dart';
+import 'package:nexusbrain/presentation/theme.dart';
 
 class NotesPage extends ConsumerStatefulWidget {
   const NotesPage({super.key});
@@ -60,10 +64,13 @@ class _NotesPageState extends ConsumerState<NotesPage> {
                     onTap: () => _createPage(context),
                     child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
                   ).animate().scale(delay: 300.ms, duration: 300.ms),
-                ]),
+                ],),
                 const SizedBox(height: 16),
                 _SearchBar(
-                  onChanged: (value) => setState(() => _searchQuery = value),
+                  onChanged: (value) {
+                    setState(() => _searchQuery = value);
+                    ref.read(searchQueryProvider.notifier).update(value);
+                  },
                 ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1),
               ],
             ),
@@ -75,34 +82,78 @@ class _NotesPageState extends ConsumerState<NotesPage> {
               error: (error, _) => Center(child: Text('${'common.error'.tr()}: $error')),
             ),
           ),
-        ]),
+        ],),
       ),
     );
   }
 
   Widget _buildPagesList(BuildContext context, List<domain.Page> pages) {
-    final filtered = _searchQuery.isEmpty
-        ? pages
-        : pages.where((p) {
-            final q = _searchQuery.toLowerCase();
-            return p.title.toLowerCase().contains(q);
-          }).toList();
+    if (_searchQuery.trim().isEmpty) {
+      return _buildRegularList(context, pages);
+    }
+    return _buildSearchResultsList(context);
+  }
 
-    if (filtered.isEmpty) {
-      return _EmptyState(hasPages: pages.isNotEmpty, onCreate: () => _createPage(context));
+  Widget _buildRegularList(BuildContext context, List<domain.Page> pages) {
+    if (pages.isEmpty) {
+      return _EmptyState(hasPages: false, onCreate: () => _createPage(context));
     }
 
-    return ListView.builder(
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
+
+    return GridView.builder(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-      itemCount: filtered.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: isDesktop ? 2 : 1,
+        childAspectRatio: isDesktop ? 2.5 : 3.5,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: pages.length,
       itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: _PageCard(
-            page: filtered[index],
-            onTap: () => _openPage(context, filtered[index]),
-            onDelete: () => _deletePage(filtered[index].pageId),
-          ),
+        return _PageCard(
+          page: pages[index],
+          onTap: () => _openPage(context, pages[index]),
+          onDelete: () => _deletePage(pages[index].pageId),
+        );
+      },
+    );
+  }
+
+  Widget _buildSearchResultsList(BuildContext context) {
+    // We can use the searchResultsProvider from notes_state.dart
+    // But since the current UI filters pages, we need to decide if we want to show blocks or pages.
+    // The issue asks for FTS5 integration. Usually this implies searching block content.
+    
+    // For now, let's update the searchResultsProvider to use the new FTS search
+    // and display the pages that contain the matching blocks.
+    
+    return Consumer(
+      builder: (context, ref, _) {
+        final searchResultsAsync = ref.watch(searchResultsProvider);
+        
+        return searchResultsAsync.when(
+          data: (pages) {
+            if (pages.isEmpty) {
+              return Center(child: Text('notes.noResults'.tr()));
+            }
+            return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+              itemCount: pages.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _PageCard(
+                    page: pages[index],
+                    onTap: () => _openPage(context, pages[index]),
+                    onDelete: () => _deletePage(pages[index].pageId),
+                  ),
+                );
+              },
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, _) => Center(child: Text('Error: $error')),
         );
       },
     );
@@ -178,32 +229,66 @@ class _PageCard extends StatelessWidget {
     final theme = Theme.of(context);
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: NexusBrainTheme.cardGradient,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF2D2D44).withValues(alpha: 0.6)),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 2))],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: [
-              Expanded(
-                child: Text(page.title,
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
+      onSecondaryTap: () async {
+        if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+
+          final window = await WindowController.create(
+            const WindowConfiguration(
+              hiddenAtLaunch: true,
+              arguments: '',
+            ),
+          );
+          await window.show();
+        }
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.cardColor.withValues(alpha: 0.7),
+                  theme.cardColor.withValues(alpha: 0.4),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(width: 8),
-              Text(_formatDate(page.updatedAt ?? DateTime.now()), style: theme.textTheme.labelSmall),
-              const SizedBox(width: 4),
-              GestureDetector(onTap: onDelete, child: const Icon(Icons.close_rounded, size: 16, color: Color(0xFF64748B))),
-            ]),
-          ],
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: theme.dividerColor.withValues(alpha: 0.3)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  Expanded(
+                    child: Text(page.title,
+                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(_formatDate(page.updatedAt ?? DateTime.now()), style: theme.textTheme.labelSmall),
+                  const SizedBox(width: 4),
+                  GestureDetector(
+                    onTap: onDelete,
+                    child: Icon(Icons.close_rounded, size: 16, color: theme.textTheme.bodySmall?.color),
+                  ),
+                ],),
+              ],
+            ),
+          ),
         ),
-      ),
+      ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.95, 0.95)),
     );
   }
 
@@ -245,20 +330,21 @@ class _SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A2E),
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF2D2D44)),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: TextField(
         onChanged: onChanged,
-        style: const TextStyle(color: Color(0xFFE2E8F0), fontSize: 14),
+        style: TextStyle(color: theme.textTheme.bodyLarge?.color, fontSize: 14),
         decoration: InputDecoration(
           hintText: 'notes.searchPages'.tr(),
-          hintStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
-          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF64748B), size: 20),
+          hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 14),
+          prefixIcon: Icon(Icons.search_rounded, color: theme.textTheme.bodySmall?.color, size: 20),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
@@ -288,7 +374,7 @@ class _EmptyState extends StatelessWidget {
         Text(
           hasPages ? 'notes.noResultsSubtitle'.tr() : 'notes.noPagesYetSubtitle'.tr(),
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xFF64748B)),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
         ),
         if (!hasPages) ...[
           const SizedBox(height: 24),
@@ -305,11 +391,11 @@ class _EmptyState extends StatelessWidget {
                 const Icon(Icons.add_rounded, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
                 Text('notes.createFirstPage'.tr(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-              ]),
+              ],),
             ),
           ),
         ],
-      ]),
+      ],),
     );
   }
 }

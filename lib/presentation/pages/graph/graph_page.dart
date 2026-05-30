@@ -1,10 +1,12 @@
 import 'dart:math';
+import 'dart:ui' as ui;
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:nexusbrain/domain/models/page.dart' as domain;
 import 'package:nexusbrain/presentation/state/notes_state.dart';
 import 'package:nexusbrain/presentation/theme.dart';
-import 'package:nexusbrain/domain/models/page.dart' as domain;
 
 class GraphPage extends ConsumerStatefulWidget {
   const GraphPage({super.key});
@@ -18,12 +20,14 @@ class _GraphPageState extends ConsumerState<GraphPage>
   late AnimationController _controller;
   final TransformationController _transformController =
       TransformationController();
+  final Set<String> _selectedTags = {};
+  bool _showFilters = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: const Duration(seconds: 20))
+        vsync: this, duration: const Duration(seconds: 20),)
       ..repeat();
   }
 
@@ -54,6 +58,13 @@ class _GraphPageState extends ConsumerState<GraphPage>
       return _buildEmptyState(context);
     }
 
+    final allTags = pages.expand((p) => p.tags.map((t) => t.name)).toSet().toList()..sort();
+    final filteredPages = _selectedTags.isEmpty
+        ? pages
+        : pages
+            .where((p) => p.tags.any((t) => _selectedTags.contains(t.name.toString())))
+            .toList();
+
     return Column(
       children: [
         Padding(
@@ -66,28 +77,33 @@ class _GraphPageState extends ConsumerState<GraphPage>
                   children: [
                     Text(
                       'graph.knowledgeGraph'.tr(),
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w800,
-                                foreground: Paint()
-                                  ..shader =
-                                      NexusBrainTheme.primaryGradient.createShader(
-                                          const Rect.fromLTWH(0, 0, 200, 40)),
-                              ),
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            foreground: Paint()
+                              ..shader = NexusBrainTheme.primaryGradient.createShader(
+                                  const Rect.fromLTWH(0, 0, 200, 40),),
+                          ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${'graph.pagesCount'.tr(namedArgs: {'count': pages.length.toString()})} · ${'graph.tagsCount'.tr(namedArgs: {'count': _countUniqueTags(pages).toString()})}',
+                      '${'graph.pagesCount'.tr(namedArgs: {'count': filteredPages.length.toString()})} · ${'graph.tagsCount'.tr(namedArgs: {'count': _countUniqueTags(filteredPages).toString()})}',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
               ),
+              IconButton(
+                icon: Icon(_showFilters ? Icons.filter_list_off_rounded : Icons.filter_list_rounded,
+                    color: _selectedTags.isNotEmpty ? Theme.of(context).colorScheme.primary : null,),
+                onPressed: () => setState(() => _showFilters = !_showFilters),
+                tooltip: 'graph.filterTags'.tr(),
+              ),
+              const SizedBox(width: 8),
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A2E),
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF2D2D44)),
+                  border: Border.all(color: Theme.of(context).dividerColor),
                 ),
                 child: Row(
                   children: [
@@ -95,10 +111,7 @@ class _GraphPageState extends ConsumerState<GraphPage>
                       icon: const Icon(Icons.remove_rounded, size: 18),
                       onPressed: () => _zoom(0.8),
                     ),
-                    Container(
-                        width: 1,
-                        height: 20,
-                        color: const Color(0xFF2D2D44)),
+                    Container(width: 1, height: 20, color: Theme.of(context).dividerColor),
                     IconButton(
                       icon: const Icon(Icons.add_rounded, size: 18),
                       onPressed: () => _zoom(1.25),
@@ -109,19 +122,52 @@ class _GraphPageState extends ConsumerState<GraphPage>
             ],
           ),
         ),
+        if (_showFilters && allTags.isNotEmpty)
+          Container(
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: allTags.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final tag = allTags[index];
+                final isSelected = _selectedTags.contains(tag);
+                return FilterChip(
+                  label: Text(tag),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        _selectedTags.add(tag);
+                      } else {
+                        _selectedTags.remove(tag);
+                      }
+                    });
+                  },
+                  selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                  checkmarkColor: Theme.of(context).colorScheme.primary,
+                  labelStyle: TextStyle(
+                    color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodySmall?.color,
+                    fontSize: 12,
+                  ),
+                );
+              },
+            ),
+          ),
         Expanded(
           child: InteractiveViewer(
             transformationController: _transformController,
-            minScale: 0.3,
-            maxScale: 3.0,
-            boundaryMargin: const EdgeInsets.all(200),
+            minScale: 0.1,
+            maxScale: 5.0,
+            boundaryMargin: const EdgeInsets.all(1000),
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
                 return CustomPaint(
-                  size: const Size(2000, 2000),
+                  size: const Size(3000, 3000),
                   painter: _GraphPainter(
-                    pages: pages,
+                    pages: filteredPages,
                     animationValue: _controller.value,
                   ),
                   child: child,
@@ -144,18 +190,18 @@ class _GraphPageState extends ConsumerState<GraphPage>
             height: 100,
             decoration: BoxDecoration(
                 gradient: NexusBrainTheme.glowGradient,
-                borderRadius: BorderRadius.circular(30)),
+                borderRadius: BorderRadius.circular(30),),
             child: const Icon(Icons.account_tree_rounded,
-                size: 50, color: Color(0xFF8B5CF6)),
+                size: 50, color: Color(0xFF8B5CF6),),
           ),
           const SizedBox(height: 24),
           Text('graph.emptyTitle'.tr(),
-              style: Theme.of(context).textTheme.headlineSmall),
+              style: Theme.of(context).textTheme.headlineSmall,),
           const SizedBox(height: 8),
           Text('graph.emptySubtitle'.tr(),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium
-                  ?.copyWith(color: const Color(0xFF64748B))),
+                  ?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),),
         ],
       ),
     );
@@ -168,7 +214,7 @@ class _GraphPageState extends ConsumerState<GraphPage>
   }
 
   int _countUniqueTags(List<domain.Page> pages) {
-    return pages.expand((p) => p.tags.toList()).toSet().length;
+    return pages.expand((p) => p.tags.map((t) => t.name)).toSet().length;
   }
 }
 
@@ -180,6 +226,8 @@ class _GraphPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (pages.isEmpty) return;
+    
     final center = Offset(size.width / 2, size.height / 2);
     final random = Random(42);
     final nodePositions = <String, Offset>{};
@@ -196,7 +244,7 @@ class _GraphPainter extends CustomPainter {
     for (int i = 0; i < pages.length; i++) {
       for (int j = i + 1; j < pages.length; j++) {
         final sharedTags =
-            pages[i].tags.toSet().intersection(pages[j].tags.toSet());
+            pages[i].tags.map((t) => t.name).toSet().intersection(pages[j].tags.map((t) => t.name).toSet());
         if (sharedTags.isNotEmpty) {
           final p1 = nodePositions[pages[i].pageId]!;
           final p2 = nodePositions[pages[j].pageId]!;
@@ -204,7 +252,7 @@ class _GraphPainter extends CustomPainter {
               max(pages[i].tags.length, pages[j].tags.length);
 
           final linePaint = Paint()
-            ..color = const Color(0xFF8B5CF6).withValues(alpha: 0.1 + strength * 0.3)
+            ..color = const Color(0xFF8B5CF6).withValues(alpha: 0.05 + strength * 0.2)
             ..strokeWidth = 1 + strength * 2
             ..style = PaintingStyle.stroke;
 
@@ -239,12 +287,13 @@ class _GraphPainter extends CustomPainter {
               ? '${page.title.substring(0, 20)}...'
               : page.title,
           style: const TextStyle(
-              color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
+              color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500,),
         ),
+        textDirection: ui.TextDirection.ltr,
       );
       textPainter.layout();
       textPainter.paint(
-          canvas, Offset(pos.dx - textPainter.width / 2, pos.dy + nodeRadius + 6));
+          canvas, Offset(pos.dx - textPainter.width / 2, pos.dy + nodeRadius + 6),);
     }
   }
 

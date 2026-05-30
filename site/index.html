@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusBrain - Dein zweites Gehirn</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            },
+            daisyui: {
+                themes: ["light", "dark", "cupcake", "emerald", "corporate", "synthwave", "retro", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "pastel", "fantasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade", "night", "coffee", "winter", "dim", "nord", "sunset"],
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        html { scroll-behavior: smooth; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+    <script src="public/js/i18n.js"></script>
+</head>
+<body class="min-h-screen font-sans">
+
+    <!-- Navbar -->
+    <div class="navbar bg-base-100 sticky top-0 z-50 shadow-lg px-4 md:px-8">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#features" data-i18n="nav.features">Features</a></li>
+                    <li><a href="#ai" data-i18n="nav.ai">AI Vision</a></li>
+                    <li><a href="#comparison" data-i18n="nav.comparison">Vergleich</a></li>
+                    <li><a href="#download" data-i18n="nav.download">Download</a></li>
+                    <div class="divider"></div>
+                    <div class="flex flex-wrap gap-1 p-2">
+                        <button class="btn btn-xs btn-ghost" data-lang-switch="de">DE</button>
+                        <button class="btn btn-xs btn-ghost" data-lang-switch="en">EN</button>
+                        <button class="btn btn-xs btn-ghost" data-lang-switch="fr">FR</button>
+                        <button class="btn btn-xs btn-ghost" data-lang-switch="es">ES</button>
+                        <button class="btn btn-xs btn-ghost" data-lang-switch="pt">PT</button>
+                    </div>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl font-bold gap-2">
+                <img src="public/img/app/nexusbrain.png" alt="NexusBrain Logo" class="w-8 h-8 rounded-lg shadow-sm">
+                NexusBrain
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="#features" class="hover:text-primary transition-colors" data-i18n="nav.features">Features</a></li>
+                <li><a href="#ai" class="hover:text-primary transition-colors" data-i18n="nav.ai">AI Vision</a></li>
+                <li><a href="#comparison" class="hover:text-primary transition-colors" data-i18n="nav.comparison">Vergleich</a></li>
+                <li><a href="#download" class="hover:text-primary transition-colors" data-i18n="nav.download">Download</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <div class="dropdown dropdown-end hidden md:block">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-2">
+                    <i class="fas fa-globe"></i>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-20">
+                    <li><button class="btn btn-sm btn-ghost" data-lang-switch="de">DE</button></li>
+                    <li><button class="btn btn-sm btn-ghost" data-lang-switch="en">EN</button></li>
+                    <li><button class="btn btn-sm btn-ghost" data-lang-switch="fr">FR</button></li>
+                    <li><button class="btn btn-sm btn-ghost" data-lang-switch="es">ES</button></li>
+                    <li><button class="btn btn-sm btn-ghost" data-lang-switch="pt">PT</button></li>
+                </ul>
+            </div>
+            <select class="select select-bordered select-sm hidden md:block" data-choose-theme>
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+                <option value="cupcake">Cupcake</option>
+                <option value="cyberpunk">Cyberpunk</option>
+                <option value="nord">Nord</option>
+            </select>
+            <a href="#download" class="btn btn-primary btn-sm md:btn-md" data-i18n="nav.start">Starten</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero min-h-[80vh] bg-base-200 overflow-hidden relative">
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+             <div class="absolute top-10 left-10 w-72 h-72 bg-primary rounded-full filter blur-[100px] animate-pulse"></div>
+             <div class="absolute bottom-10 right-10 w-96 h-96 bg-secondary rounded-full filter blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
+        </div>
+        <div class="hero-content text-center">
+            <div class="max-w-3xl">
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                    <span data-i18n="hero.title">Dein Wissen, </span><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary" data-i18n="hero.titleAccent">vernetzt & intelligent.</span>
+                </h1>
+                <p class="py-6 text-lg md:text-xl opacity-80" data-i18n="hero.subtitle">
+                    NexusBrain ist die moderne Logseq-Alternative. Organisiere deine Gedanken in Blöcken, entdecke versteckte Verbindungen mit lokaler KI und behalte die volle Kontrolle über deine Daten.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button class="btn btn-primary btn-lg shadow-xl shadow-primary/20" data-i18n="hero.cta_primary">Jetzt kostenlos laden</button>
+                    <button class="btn btn-outline btn-lg" data-i18n="hero.cta_secondary">Features erkunden</button>
+                </div>
+                <div class="mt-12 flex justify-center gap-8 text-sm opacity-60">
+                    <span class="flex items-center gap-2"><i class="fas fa-shield-halved"></i> <span data-i18n="hero.badge_local">100% Lokal</span></span>
+                    <span class="flex items-center gap-2"><i class="fas fa-sync"></i> <span data-i18n="hero.badge_sync">Cloud Sync</span></span>
+                    <span class="flex items-center gap-2"><i class="fas fa-brain"></i> <span data-i18n="hero.badge_ai">Local AI</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="container mx-auto px-4 -mt-10 relative z-10">
+        <div class="stats stats-vertical lg:stats-horizontal shadow-2xl w-full bg-base-100">
+            <div class="stat">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-cube fa-2x"></i>
+                </div>
+                <div class="stat-title" data-i18n="stats.structure">Struktur</div>
+                <div class="stat-value text-primary" data-i18n="stats.structure_val">Block-basiert</div>
+                <div class="stat-desc" data-i18n="stats.structure_desc">Infinite Nesting</div>
+            </div>
+            <div class="stat">
+                <div class="stat-figure text-secondary">
+                    <i class="fas fa-share-nodes fa-2x"></i>
+                </div>
+                <div class="stat-title" data-i18n="stats.connections">Verbindungen</div>
+                <div class="stat-value text-secondary" data-i18n="stats.connections_val">Bidirektional</div>
+                <div class="stat-desc" data-i18n="stats.connections_desc">Links & Refs</div>
+            </div>
+            <div class="stat">
+                <div class="stat-figure text-accent">
+                    <i class="fas fa-bolt fa-2x"></i>
+                </div>
+                <div class="stat-title" data-i18n="stats.performance">Performance</div>
+                <div class="stat-value text-accent" data-i18n="stats.performance_val">Native</div>
+                <div class="stat-desc" data-i18n="stats.performance_desc">Desktop, Mobile & Web</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4" data-i18n="features.title">Mächtige Features für Power-User</h2>
+                <p class="max-w-2xl mx-auto opacity-70" data-i18n="features.subtitle">NexusBrain kombiniert die besten Konzepte aus vernetztem Denken mit modernster Technologie.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card bg-base-200 hover:shadow-2xl transition-all hover:-translate-y-2 border border-base-300">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
+                            <i class="fas fa-layer-group fa-lg"></i>
+                        </div>
+                        <h3 class="card-title" data-i18n="features.f1_title">Block-basierter Editor</h3>
+                        <p class="opacity-70" data-i18n="features.f1_desc">Ein Logseq-ähnlicher Outliner mit unendlicher Verschachtelung. Fokussiere dich auf einzelne Blöcke und organisiere dein Wissen granular.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card bg-base-200 hover:shadow-2xl transition-all hover:-translate-y-2 border border-base-300">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4 text-secondary">
+                            <i class="fas fa-link fa-lg"></i>
+                        </div>
+                        <h3 class="card-title" data-i18n="features.f2_title">WikiLinks & Refs</h3>
+                        <p class="opacity-70" data-i18n="features.f2_desc">Verknüpfe Seiten mit `[[Page]]` und referenziere Blöcke mit `((block))`. Baue ein Netz aus Informationen, das mit dir wächst.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card bg-base-200 hover:shadow-2xl transition-all hover:-translate-y-2 border border-base-300">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i class="fas fa-circle-nodes fa-lg"></i>
+                        </div>
+                        <h3 class="card-title" data-i18n="features.f3_title">Graph Visualisierung</h3>
+                        <p class="opacity-70" data-i18n="features.f3_desc">Interaktive visuelle Karte aller Verbindungen. Navigiere intuitiv durch dein Wissensnetz und entdecke Cluster.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="card bg-base-200 hover:shadow-2xl transition-all hover:-translate-y-2 border border-base-300">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-info/10 rounded-lg flex items-center justify-center mb-4 text-info">
+                            <i class="fas fa-sync-alt fa-lg"></i>
+                        </div>
+                        <h3 class="card-title" data-i18n="features.f4_title">Cloud Sync (WebDAV/Git)</h3>
+                        <p class="opacity-70" data-i18n="features.f4_desc">Synchronisiere deine Daten sicher via WebDAV (Nextcloud, ownCloud) oder Git. Du behältst die Hoheit über deine Daten.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="card bg-base-200 hover:shadow-2xl transition-all hover:-translate-y-2 border border-base-300">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center mb-4 text-success">
+                            <i class="fas fa-code fa-lg"></i>
+                        </div>
+                        <h3 class="card-title" data-i18n="features.f5_title">Plugins & Scripting</h3>
+                        <p class="opacity-70" data-i18n="features.f5_desc">Erweitere NexusBrain mit JavaScript-basierten Plugins. Passe den Editor und den Workflow genau an deine Bedürfnisse an.</p>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="card bg-base-200 hover:shadow-2xl transition-all hover:-translate-y-2 border border-base-300">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-warning/10 rounded-lg flex items-center justify-center mb-4 text-warning">
+                            <i class="fas fa-window-restore fa-lg"></i>
+                        </div>
+                        <h3 class="card-title" data-i18n="features.f6_title">Multi-Window Support</h3>
+                        <p class="opacity-70" data-i18n="features.f6_desc">Auf dem Desktop kannst du mehrere Notizen gleichzeitig in separaten Fenstern öffnen – ideal für produktives Arbeiten.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Vision Section -->
+    <section id="ai" class="py-24 bg-base-200 relative overflow-hidden">
+        <div class="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-16">
+            <div class="lg:w-1/2">
+                <div class="badge badge-primary mb-4" data-i18n="ai.badge">Local AI</div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6"><span data-i18n="ai.title">Mehr als nur ein Notizbuch: </span><span class="text-primary" data-i18n="ai.titleAccent">Intelligente Assistenz.</span></h2>
+                <p class="text-lg mb-8 opacity-80 leading-relaxed" data-i18n="ai.desc">
+                    NexusBrain nutzt lokale KI, um dein Wissen zum Leben zu erwecken. Kein Datentransfer in die Cloud, 100% Privatsphäre.
+                </p>
+                
+                <ul class="space-y-4">
+                    <li class="flex gap-4">
+                        <div class="flex-none text-primary mt-1"><i class="fas fa-magnifying-glass"></i></div>
+                        <div>
+                            <h4 class="font-bold" data-i18n="ai.s1_title">Semantische Suche</h4>
+                            <p class="opacity-70" data-i18n="ai.s1_desc">Finde Inhalte basierend auf der Bedeutung, nicht nur auf exakten Keywords. „Such nach Projektideen“ findet auch „Inspiration für neue Apps“.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="flex-none text-primary mt-1"><i class="fas fa-wand-magic-sparkles"></i></div>
+                        <div>
+                            <h4 class="font-bold" data-i18n="ai.s2_title">Automatische Themenextraktion</h4>
+                            <p class="opacity-70" data-i18n="ai.s2_desc">Die KI schlägt automatisch Tags und Kategorien basierend auf deinen Inhalten vor.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="flex-none text-primary mt-1"><i class="fas fa-lightbulb"></i></div>
+                        <div>
+                            <h4 class="font-bold" data-i18n="ai.s3_title">Hidden Connections</h4>
+                            <p class="opacity-70" data-i18n="ai.s3_desc">Entdecke während des Schreibens automatisch Verknüpfungen zu anderen Seiten, die du vielleicht vergessen hast.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="lg:w-1/2 relative">
+                <div class="relative group">
+                    <img src="public/img/app/nb.jpeg" alt="NexusBrain App" class="rounded-2xl shadow-2xl border border-base-300 w-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-base-900/40 to-transparent rounded-2xl pointer-events-none"></div>
+                    
+                    <div class="absolute -bottom-6 -right-6 md:bottom-10 md:-right-10 mockup-code glass-card shadow-2xl hidden md:block">
+                        <pre data-prefix="$"><code data-i18n="ai.mockup_analyzing">analyzing knowledge graph...</code></pre> 
+                        <pre data-prefix=">" class="text-warning"><code data-i18n="ai.mockup_found">3 hidden connections found!</code></pre> 
+                        <pre data-prefix=">" class="text-success"><code data-i18n="ai.mockup_suggesting">suggesting tags: #ai #privacy #future</code></pre>
+                        <pre data-prefix=">"><code data-i18n="ai.mockup_match">semantic match: "AI Vision" <-> "Future Tech"</code></pre>
+                    </div>
+                </div>
+                <!-- Decorative elements -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary/20 rounded-full blur-2xl -z-10"></div>
+                <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="py-24 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4" data-i18n="comparison.title">Warum NexusBrain?</h2>
+                <p class="opacity-70 text-lg" data-i18n="comparison.subtitle">Ein Vergleich mit den Großen.</p>
+            </div>
+
+            <div class="overflow-x-auto max-w-4xl mx-auto rounded-xl shadow-xl border border-base-200">
+                <table class="table table-zebra w-full">
+                    <!-- head -->
+                    <thead>
+                        <tr class="bg-base-200">
+                            <th data-i18n="comparison.feature">Feature</th>
+                            <th class="text-primary font-bold">NexusBrain</th>
+                            <th>Logseq</th>
+                            <th>Obsidian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-i18n="comparison.f1">Block-basiert (Outliner)</td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.yes">Ja</span></td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.yes">Ja</span></td>
+                            <td><i class="fas fa-xmark text-error"></i> <span data-i18n="comparison.no">Nein</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="comparison.f2">Native Mobil-App</td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.excellent">Exzellent</span></td>
+                            <td><i class="fas fa-check text-warning"></i> <span data-i18n="comparison.medium">Mittel</span></td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.yes">Ja</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="comparison.f3">Integrierte Local AI</td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.native">Native</span></td>
+                            <td><i class="fas fa-puzzle-piece"></i> <span data-i18n="comparison.plugins">Plugins</span></td>
+                            <td><i class="fas fa-puzzle-piece"></i> <span data-i18n="comparison.plugins">Plugins</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="comparison.f4">Cloud-Sync (Eigener Server)</td>
+                            <td><i class="fas fa-check text-success"></i> WebDAV/Git</td>
+                            <td><i class="fas fa-check text-warning"></i> Git (Beta)</td>
+                            <td><i class="fas fa-dollar-sign"></i> <span data-i18n="comparison.paid">Paid Sync</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="comparison.f5">UI/UX Design</td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.modern">Modern/Glass</span></td>
+                            <td><i class="fas fa-check text-warning"></i> <span data-i18n="comparison.functional">Funktional</span></td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.customizable">Anpassbar</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="comparison.f6">Multi-Window Support</td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.yes">Ja</span></td>
+                            <td><i class="fas fa-xmark text-error"></i> <span data-i18n="comparison.limited">Begrenzt</span></td>
+                            <td><i class="fas fa-check text-success"></i> <span data-i18n="comparison.yes">Ja</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Download Section -->
+    <section id="download" class="py-24 bg-gradient-to-br from-primary/10 to-secondary/10">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-8" data-i18n="download.title">Bereit für NexusBrain?</h2>
+            <p class="text-xl mb-12 opacity-80 max-w-2xl mx-auto" data-i18n="download.subtitle">
+                Egal ob Web, Desktop oder Mobile – NexusBrain ist überall dort, wo du deine Gedanken festhalten willst.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-6">
+                <a class="btn btn-neutral btn-lg gap-3">
+                    <i class="fab fa-apple"></i> App Store
+                </a>
+                <a class="btn btn-neutral btn-lg gap-3">
+                    <i class="fab fa-google-play"></i> Play Store
+                </a>
+                <a class="btn btn-neutral btn-lg gap-3">
+                    <i class="fab fa-linux"></i> AppImage / Deb
+                </a>
+                <a class="btn btn-neutral btn-lg gap-3">
+                    <i class="fab fa-windows"></i> Windows .exe
+                </a>
+                <a class="btn btn-primary btn-lg gap-3">
+                    <i class="fas fa-globe"></i> <span data-i18n="download.web">Web App öffnen</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer p-10 bg-base-200 text-base-content border-t border-base-300">
+        <aside>
+            <img src="public/img/app/nexusbrain.png" alt="NexusBrain Logo" class="w-12 h-12 rounded-xl mb-2">
+            <p class="font-bold">NexusBrain App</p>
+            <p><span data-i18n="footer.desc">Dein zweites Gehirn – Sicher, Lokal, Intelligent.</span><br/>© 2024 peopleandpixel</p>
+        </aside> 
+        <nav>
+            <header class="footer-title text-primary" data-i18n="footer.links">Links</header> 
+            <a class="link link-hover" href="#features" data-i18n="nav.features">Features</a> 
+            <a class="link link-hover" href="#ai" data-i18n="nav.ai">AI Vision</a> 
+            <a class="link link-hover" href="#comparison" data-i18n="nav.comparison">Vergleich</a>
+            <a class="link link-hover" href="https://github.com/peopleandpixel/nexusbrain">GitHub</a>
+        </nav> 
+        <nav>
+            <header class="footer-title text-secondary" data-i18n="footer.legal">Rechtliches</header> 
+            <a class="link link-hover" data-i18n="footer.imprint">Impressum</a> 
+            <a class="link link-hover" data-i18n="footer.privacy">Datenschutz</a> 
+            <a class="link link-hover" data-i18n="footer.tos">AGB</a>
+        </nav>
+    </footer>
+
+    <!-- Theme Selection Script -->
+    <script>
+        // Theme selection logic
+        const themeSelect = document.querySelector('[data-choose-theme]');
+        if (themeSelect) {
+            themeSelect.addEventListener('change', (e) => {
+                document.documentElement.setAttribute('data-theme', e.target.value);
+            });
+        }
+    </script>
+</body>
+</html>

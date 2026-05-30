@@ -47,98 +47,103 @@ const BlockSchema = CollectionSchema(
       name: r'deadlineAt',
       type: IsarType.dateTime,
     ),
-    r'hasBlockRefs': PropertySchema(
+    r'embedding': PropertySchema(
       id: 6,
+      name: r'embedding',
+      type: IsarType.doubleList,
+    ),
+    r'hasBlockRefs': PropertySchema(
+      id: 7,
       name: r'hasBlockRefs',
       type: IsarType.bool,
     ),
     r'hasPageLinks': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'hasPageLinks',
       type: IsarType.bool,
     ),
     r'indentLevel': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'indentLevel',
       type: IsarType.long,
     ),
     r'isCollapsed': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'isCollapsed',
       type: IsarType.bool,
     ),
     r'isCompletedTask': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'isCompletedTask',
       type: IsarType.bool,
     ),
     r'isOpenTask': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'isOpenTask',
       type: IsarType.bool,
     ),
     r'isOverdue': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'isOverdue',
       type: IsarType.bool,
     ),
     r'isTask': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'isTask',
       type: IsarType.bool,
     ),
     r'linkedPageTitles': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'linkedPageTitles',
       type: IsarType.stringList,
     ),
     r'orderIndex': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'orderIndex',
       type: IsarType.long,
     ),
     r'pageId': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'pageId',
       type: IsarType.string,
     ),
     r'parentId': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'parentId',
       type: IsarType.string,
     ),
     r'preview': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'preview',
       type: IsarType.string,
     ),
     r'referencedBlockIds': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'referencedBlockIds',
       type: IsarType.stringList,
     ),
     r'scheduledAt': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'scheduledAt',
       type: IsarType.dateTime,
     ),
     r'taskColor': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'taskColor',
       type: IsarType.long,
     ),
     r'taskIcon': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'taskIcon',
       type: IsarType.string,
     ),
     r'taskState': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'taskState',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -212,6 +217,12 @@ int _blockEstimateSize(
       bytesCount += value.length * 3;
     }
   }
+  {
+    final value = object.embedding;
+    if (value != null) {
+      bytesCount += 3 + value.length * 8;
+    }
+  }
   bytesCount += 3 + object.linkedPageTitles.length * 3;
   {
     for (var i = 0; i < object.linkedPageTitles.length; i++) {
@@ -256,25 +267,26 @@ void _blockSerialize(
   writer.writeStringList(offsets[3], object.contentWords);
   writer.writeDateTime(offsets[4], object.createdAt);
   writer.writeDateTime(offsets[5], object.deadlineAt);
-  writer.writeBool(offsets[6], object.hasBlockRefs);
-  writer.writeBool(offsets[7], object.hasPageLinks);
-  writer.writeLong(offsets[8], object.indentLevel);
-  writer.writeBool(offsets[9], object.isCollapsed);
-  writer.writeBool(offsets[10], object.isCompletedTask);
-  writer.writeBool(offsets[11], object.isOpenTask);
-  writer.writeBool(offsets[12], object.isOverdue);
-  writer.writeBool(offsets[13], object.isTask);
-  writer.writeStringList(offsets[14], object.linkedPageTitles);
-  writer.writeLong(offsets[15], object.orderIndex);
-  writer.writeString(offsets[16], object.pageId);
-  writer.writeString(offsets[17], object.parentId);
-  writer.writeString(offsets[18], object.preview);
-  writer.writeStringList(offsets[19], object.referencedBlockIds);
-  writer.writeDateTime(offsets[20], object.scheduledAt);
-  writer.writeLong(offsets[21], object.taskColor);
-  writer.writeString(offsets[22], object.taskIcon);
-  writer.writeString(offsets[23], object.taskState);
-  writer.writeDateTime(offsets[24], object.updatedAt);
+  writer.writeDoubleList(offsets[6], object.embedding);
+  writer.writeBool(offsets[7], object.hasBlockRefs);
+  writer.writeBool(offsets[8], object.hasPageLinks);
+  writer.writeLong(offsets[9], object.indentLevel);
+  writer.writeBool(offsets[10], object.isCollapsed);
+  writer.writeBool(offsets[11], object.isCompletedTask);
+  writer.writeBool(offsets[12], object.isOpenTask);
+  writer.writeBool(offsets[13], object.isOverdue);
+  writer.writeBool(offsets[14], object.isTask);
+  writer.writeStringList(offsets[15], object.linkedPageTitles);
+  writer.writeLong(offsets[16], object.orderIndex);
+  writer.writeString(offsets[17], object.pageId);
+  writer.writeString(offsets[18], object.parentId);
+  writer.writeString(offsets[19], object.preview);
+  writer.writeStringList(offsets[20], object.referencedBlockIds);
+  writer.writeDateTime(offsets[21], object.scheduledAt);
+  writer.writeLong(offsets[22], object.taskColor);
+  writer.writeString(offsets[23], object.taskIcon);
+  writer.writeString(offsets[24], object.taskState);
+  writer.writeDateTime(offsets[25], object.updatedAt);
 }
 
 Block _blockDeserialize(
@@ -289,14 +301,15 @@ Block _blockDeserialize(
     content: reader.readStringOrNull(offsets[2]) ?? '',
     createdAt: reader.readDateTimeOrNull(offsets[4]),
     deadlineAt: reader.readDateTimeOrNull(offsets[5]),
-    indentLevel: reader.readLongOrNull(offsets[8]) ?? 0,
-    isCollapsed: reader.readBoolOrNull(offsets[9]) ?? false,
-    orderIndex: reader.readLongOrNull(offsets[15]) ?? 0,
-    pageId: reader.readString(offsets[16]),
-    parentId: reader.readStringOrNull(offsets[17]),
-    scheduledAt: reader.readDateTimeOrNull(offsets[20]),
-    taskState: reader.readStringOrNull(offsets[23]),
-    updatedAt: reader.readDateTimeOrNull(offsets[24]),
+    embedding: reader.readDoubleList(offsets[6]),
+    indentLevel: reader.readLongOrNull(offsets[9]) ?? 0,
+    isCollapsed: reader.readBoolOrNull(offsets[10]) ?? false,
+    orderIndex: reader.readLongOrNull(offsets[16]) ?? 0,
+    pageId: reader.readString(offsets[17]),
+    parentId: reader.readStringOrNull(offsets[18]),
+    scheduledAt: reader.readDateTimeOrNull(offsets[21]),
+    taskState: reader.readStringOrNull(offsets[24]),
+    updatedAt: reader.readDateTimeOrNull(offsets[25]),
   );
   object.id = id;
   return object;
@@ -322,15 +335,15 @@ P _blockDeserializeProp<P>(
     case 5:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 6:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDoubleList(offset)) as P;
     case 7:
       return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readLongOrNull(offset) ?? 0) as P;
-    case 9:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 10:
       return (reader.readBool(offset)) as P;
+    case 9:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 10:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 11:
       return (reader.readBool(offset)) as P;
     case 12:
@@ -338,26 +351,28 @@ P _blockDeserializeProp<P>(
     case 13:
       return (reader.readBool(offset)) as P;
     case 14:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readBool(offset)) as P;
     case 15:
-      return (reader.readLongOrNull(offset) ?? 0) as P;
-    case 16:
-      return (reader.readString(offset)) as P;
-    case 17:
-      return (reader.readStringOrNull(offset)) as P;
-    case 18:
-      return (reader.readString(offset)) as P;
-    case 19:
       return (reader.readStringList(offset) ?? []) as P;
-    case 20:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 21:
-      return (reader.readLong(offset)) as P;
-    case 22:
+    case 16:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 17:
       return (reader.readString(offset)) as P;
-    case 23:
+    case 18:
       return (reader.readStringOrNull(offset)) as P;
+    case 19:
+      return (reader.readString(offset)) as P;
+    case 20:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 21:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 22:
+      return (reader.readLong(offset)) as P;
+    case 23:
+      return (reader.readString(offset)) as P;
     case 24:
+      return (reader.readStringOrNull(offset)) as P;
+    case 25:
       return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1368,6 +1383,168 @@ extension BlockQueryFilter on QueryBuilder<Block, Block, QFilterCondition> {
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'embedding',
+      ));
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'embedding',
+      ));
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingElementEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'embedding',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingElementGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'embedding',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingElementLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'embedding',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingElementBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'embedding',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'embedding',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'embedding',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'embedding',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'embedding',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'embedding',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Block, Block, QAfterFilterCondition> embeddingLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'embedding',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -3511,6 +3688,12 @@ extension BlockQueryWhereDistinct on QueryBuilder<Block, Block, QDistinct> {
     });
   }
 
+  QueryBuilder<Block, Block, QDistinct> distinctByEmbedding() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'embedding');
+    });
+  }
+
   QueryBuilder<Block, Block, QDistinct> distinctByHasBlockRefs() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'hasBlockRefs');
@@ -3671,6 +3854,12 @@ extension BlockQueryProperty on QueryBuilder<Block, Block, QQueryProperty> {
   QueryBuilder<Block, DateTime?, QQueryOperations> deadlineAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'deadlineAt');
+    });
+  }
+
+  QueryBuilder<Block, List<double>?, QQueryOperations> embeddingProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'embedding');
     });
   }
 

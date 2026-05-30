@@ -1,0 +1,97 @@
+{
+  "nav": {
+    "features": "Features",
+    "ai": "AI Vision",
+    "comparison": "Comparison",
+    "download": "Download",
+    "start": "Get Started"
+  },
+  "hero": {
+    "title": "Your Knowledge, ",
+    "titleAccent": "connected & intelligent.",
+    "subtitle": "NexusBrain is the modern Logseq alternative. Organize your thoughts in blocks, discover hidden connections with local AI, and keep full control over your data.",
+    "cta_primary": "Download for Free",
+    "cta_secondary": "Explore Features",
+    "badge_local": "100% Local",
+    "badge_sync": "Cloud Sync",
+    "badge_ai": "Local AI"
+  },
+  "stats": {
+    "structure": "Structure",
+    "structure_val": "Block-based",
+    "structure_desc": "Infinite Nesting",
+    "connections": "Connections",
+    "connections_val": "Bidirectional",
+    "connections_desc": "Links & Refs",
+    "performance": "Performance",
+    "performance_val": "Native",
+    "performance_desc": "Desktop, Mobile & Web"
+  },
+  "features": {
+    "title": "Powerful Features for Power Users",
+    "subtitle": "NexusBrain combines the best concepts of networked thinking with state-of-the-art technology.",
+    "f1_title": "Block-based Editor",
+    "f1_desc": "A Logseq-like outliner with infinite nesting. Focus on individual blocks and organize your knowledge granularly.",
+    "f2_title": "WikiLinks & Refs",
+    "f2_desc": "Link pages with `[[Page]]` and reference blocks with `((block))`. Build a web of information that grows with you.",
+    "f3_title": "Graph Visualization",
+    "f3_desc": "Interactive visual map of all connections. Navigate intuitively through your knowledge web and discover clusters.",
+    "f4_title": "E2EE Cloud Sync",
+    "f4_desc": "Sync your data securely via WebDAV or Git with End-to-End Encryption. Your data stays private and secure.",
+    "f5_title": "PDF & Annotation",
+    "f5_desc": "Integrated PDF reader with deep links. Link your notes directly to specific parts of your PDF documents.",
+    "f6_title": "Multi-Window & Biometric",
+    "f6_desc": "Use multiple windows on desktop and protect your data on mobile with Fingerprint or FaceID."
+  },
+  "ai": {
+    "badge": "Local AI",
+    "title": "More than just a notebook: ",
+    "titleAccent": "Intelligent Assistance.",
+    "desc": "NexusBrain uses local AI to bring your knowledge to life. No data transfer to the cloud, 100% privacy.",
+    "s1_title": "Semantic Search",
+    "s1_desc": "Find content based on meaning, not just exact keywords. \"Search for project ideas\" also finds \"Inspiration for new apps\".",
+    "s2_title": "Automatic Topic Extraction",
+    "s2_desc": "The AI automatically suggests tags and categories based on your content.",
+    "s3_title": "Hidden Connections",
+    "s3_desc": "Automatically discover links to other pages you might have forgotten while writing.",
+    "mockup_analyzing": "analyzing knowledge graph...",
+    "mockup_found": "3 hidden connections found!",
+    "mockup_suggesting": "suggesting tags: #ai #privacy #future",
+    "mockup_match": "semantic match: \"AI Vision\" <-> \"Future Tech\""
+  },
+  "comparison": {
+    "title": "Why NexusBrain?",
+    "subtitle": "A comparison with the giants.",
+    "feature": "Feature",
+    "f1": "Block-based (Outliner)",
+    "f2": "Native Mobile App",
+    "f3": "Integrated Local AI",
+    "f4": "Cloud Sync (Own Server)",
+    "f5": "UI/UX Design",
+    "f6": "Multi-Window Support",
+    "yes": "Yes",
+    "no": "No",
+    "excellent": "Excellent",
+    "medium": "Medium",
+    "native": "Native",
+    "plugins": "Plugins",
+    "paid": "Paid Sync",
+    "modern": "Modern/Glass",
+    "functional": "Functional",
+    "customizable": "Customizable",
+    "limited": "Limited"
+  },
+  "download": {
+    "title": "Ready for NexusBrain?",
+    "subtitle": "Whether on web, desktop, or mobile – NexusBrain is wherever you want to capture your thoughts.",
+    "web": "Open Web App"
+  },
+  "footer": {
+    "desc": "Your Second Brain – Secure, Local, Intelligent.",
+    "links": "Links",
+    "legal": "Legal",
+    "imprint": "Imprint",
+    "privacy": "Privacy Policy",
+    "tos": "Terms of Service"
+  }
+}

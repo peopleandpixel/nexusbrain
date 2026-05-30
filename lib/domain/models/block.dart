@@ -25,6 +25,8 @@ class Block {
   DateTime? createdAt;
   DateTime? updatedAt;
 
+  List<double>? embedding;
+
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get contentWords =>
       content.toLowerCase().split(RegExp(r'\s+'));
@@ -43,6 +45,7 @@ class Block {
     this.completedAt,
     this.createdAt,
     this.updatedAt,
+    this.embedding,
   });
 
   bool get isTask => taskState != null;

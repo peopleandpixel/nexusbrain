@@ -37,13 +37,18 @@ const PageSchema = CollectionSchema(
       name: r'pageId',
       type: IsarType.string,
     ),
-    r'title': PropertySchema(
+    r'pdfPath': PropertySchema(
       id: 4,
+      name: r'pdfPath',
+      type: IsarType.string,
+    ),
+    r'title': PropertySchema(
+      id: 5,
       name: r'title',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -96,6 +101,12 @@ int _pageEstimateSize(
     }
   }
   bytesCount += 3 + object.pageId.length * 3;
+  {
+    final value = object.pdfPath;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.title.length * 3;
   return bytesCount;
 }
@@ -110,8 +121,9 @@ void _pageSerialize(
   writer.writeString(offsets[1], object.filePath);
   writer.writeBool(offsets[2], object.isJournal);
   writer.writeString(offsets[3], object.pageId);
-  writer.writeString(offsets[4], object.title);
-  writer.writeDateTime(offsets[5], object.updatedAt);
+  writer.writeString(offsets[4], object.pdfPath);
+  writer.writeString(offsets[5], object.title);
+  writer.writeDateTime(offsets[6], object.updatedAt);
 }
 
 Page _pageDeserialize(
@@ -125,8 +137,9 @@ Page _pageDeserialize(
     filePath: reader.readStringOrNull(offsets[1]),
     isJournal: reader.readBoolOrNull(offsets[2]) ?? false,
     pageId: reader.readString(offsets[3]),
-    title: reader.readString(offsets[4]),
-    updatedAt: reader.readDateTimeOrNull(offsets[5]),
+    pdfPath: reader.readStringOrNull(offsets[4]),
+    title: reader.readString(offsets[5]),
+    updatedAt: reader.readDateTimeOrNull(offsets[6]),
   );
   object.id = id;
   return object;
@@ -148,8 +161,10 @@ P _pageDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
       return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -745,6 +760,150 @@ extension PageQueryFilter on QueryBuilder<Page, Page, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'pdfPath',
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'pdfPath',
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'pdfPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'pdfPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'pdfPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'pdfPath',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'pdfPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'pdfPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'pdfPath',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'pdfPath',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'pdfPath',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterFilterCondition> pdfPathIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'pdfPath',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Page, Page, QAfterFilterCondition> titleEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1051,6 +1210,18 @@ extension PageQuerySortBy on QueryBuilder<Page, Page, QSortBy> {
     });
   }
 
+  QueryBuilder<Page, Page, QAfterSortBy> sortByPdfPath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pdfPath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterSortBy> sortByPdfPathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pdfPath', Sort.desc);
+    });
+  }
+
   QueryBuilder<Page, Page, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1137,6 +1308,18 @@ extension PageQuerySortThenBy on QueryBuilder<Page, Page, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Page, Page, QAfterSortBy> thenByPdfPath() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pdfPath', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Page, Page, QAfterSortBy> thenByPdfPathDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'pdfPath', Sort.desc);
+    });
+  }
+
   QueryBuilder<Page, Page, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1189,6 +1372,13 @@ extension PageQueryWhereDistinct on QueryBuilder<Page, Page, QDistinct> {
     });
   }
 
+  QueryBuilder<Page, Page, QDistinct> distinctByPdfPath(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'pdfPath', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Page, Page, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1231,6 +1421,12 @@ extension PageQueryProperty on QueryBuilder<Page, Page, QQueryProperty> {
   QueryBuilder<Page, String, QQueryOperations> pageIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pageId');
+    });
+  }
+
+  QueryBuilder<Page, String?, QQueryOperations> pdfPathProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'pdfPath');
     });
   }
 

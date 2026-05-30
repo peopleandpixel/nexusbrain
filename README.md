@@ -6,22 +6,32 @@ A personal knowledge management app — Logseq alternative built with Flutter.
 
 - **Block-based editor** — Logseq-style outliner with infinite nesting
 - **Task management** — TODO / DOING / DONE / CANCELLED states with keyboard shortcuts
-- **WikiLinks** — `[[Page Title]]` syntax for page links
-- **Block references** — `((block-id))` for deep linking
-- **Graph visualization** — Visual map of page connections
-- **Semantic search** — AI-powered embeddings for content discovery
-- **Full-text search** — SQLite FTS5 for fast content search
-- **WebDAV sync** — Nextcloud / ownCloud integration
-- **Import/Export** — Markdown file support
-- **Cross-platform** — Web, Desktop (Linux, macOS, Windows), Mobile (Android, iOS)
+- **WikiLinks & Block Refs** — `[[Page Title]]` and `((block-id))` for deep interconnected knowledge
+- **Graph visualization** — Interactive visual map of all page connections with zoom & pan
+- **Hybrid Search** — FTS5 for exact matches and AI-powered Semantic Search for context-aware discovery
+- **WebDAV & Git Sync** — Seamless bi-directional synchronization with E2EE (End-to-End Encryption)
+- **PDF-Viewer & Annotation** — Deep-link directly into PDFs from your notes
+- **Biometric Security** — Secure your brain with Fingerprint or FaceID
+- **Plugins & Scripting** — Extend functionality with JavaScript-based plugins (JS-Hooks API)
+- **Multi-Window Support** — Open multiple notes in separate windows on Desktop
+- **Modern UI/UX** — Material You, Glassmorphism, and i18n support (DE, EN, FR, ES, PT)
+- **Cross-platform** — Native performance on Web, Desktop, and Mobile (Android, iOS)
+
+## AI Vision
+
+NexusBrain aims to be more than just a notebook. We are integrating local AI to help you discover hidden connections:
+- **Semantic Search:** Find what you mean, not just what you typed.
+- **Topic Extraction:** Automatically suggest tags and categories for your blocks.
+- **Hidden Connections:** Discovery of related pages that aren't linked yet.
+- **Local First:** All AI processing happens on your device. Your data never leaves your machine.
 
 ## Tech Stack
 
 - **Language:** Dart
 - **Framework:** Flutter
-- **Database:** Drift (SQLite) with FTS5
-- **State Management:** Riverpod
-- **AI:** Embeddings for semantic search
+- **Database:** Isar NoSQL (Community Edition)
+- **State Management:** Riverpod (with Generator)
+- **AI:** ONNX Runtime for local Vektor-Embeddings
 
 ## Project Structure
 

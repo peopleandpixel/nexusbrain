@@ -40,7 +40,7 @@ class NexusBrainTheme {
       labelLarge: TextStyle(color: _text, fontWeight: FontWeight.w500, fontSize: 14),
       labelMedium: TextStyle(color: _textMuted, fontSize: 12),
       labelSmall: TextStyle(color: _textMuted, fontSize: 10),
-    )),
+    ),),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -141,7 +141,7 @@ class NexusBrainTheme {
       labelLarge: TextStyle(color: _lightText, fontWeight: FontWeight.w500, fontSize: 14),
       labelMedium: TextStyle(color: _lightTextMuted, fontSize: 12),
       labelSmall: TextStyle(color: _lightTextMuted, fontSize: 10),
-    )),
+    ),),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,

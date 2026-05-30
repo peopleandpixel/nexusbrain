@@ -1,0 +1,97 @@
+{
+  "nav": {
+    "features": "Features",
+    "ai": "AI Vision",
+    "comparison": "Vergleich",
+    "download": "Download",
+    "start": "Starten"
+  },
+  "hero": {
+    "title": "Dein Wissen, ",
+    "titleAccent": "vernetzt & intelligent.",
+    "subtitle": "NexusBrain ist die moderne Logseq-Alternative. Organisiere deine Gedanken in Blöcken, entdecke versteckte Verbindungen mit lokaler KI und behalte die volle Kontrolle über deine Daten.",
+    "cta_primary": "Jetzt kostenlos laden",
+    "cta_secondary": "Features erkunden",
+    "badge_local": "100% Lokal",
+    "badge_sync": "Cloud Sync",
+    "badge_ai": "Local AI"
+  },
+  "stats": {
+    "structure": "Struktur",
+    "structure_val": "Block-basiert",
+    "structure_desc": "Infinite Nesting",
+    "connections": "Verbindungen",
+    "connections_val": "Bidirektional",
+    "connections_desc": "Links & Refs",
+    "performance": "Performance",
+    "performance_val": "Native",
+    "performance_desc": "Desktop, Mobile & Web"
+  },
+  "features": {
+    "title": "Mächtige Features für Power-User",
+    "subtitle": "NexusBrain kombiniert die besten Konzepte aus vernetztem Denken mit modernster Technologie.",
+    "f1_title": "Block-basierter Editor",
+    "f1_desc": "Ein Logseq-ähnlicher Outliner mit unendlicher Verschachtelung. Fokussiere dich auf einzelne Blöcke und organisiere dein Wissen granular.",
+    "f2_title": "WikiLinks & Refs",
+    "f2_desc": "Verknüpfe Seiten mit `[[Page]]` und referenziere Blöcke mit `((block))`. Baue ein Netz aus Informationen, das mit dir wächst.",
+    "f3_title": "Graph Visualisierung",
+    "f3_desc": "Interaktive visuelle Karte aller Verbindungen. Navigiere intuitiv durch dein Wissensnetz und entdecke Cluster.",
+    "f4_title": "E2EE Cloud Sync",
+    "f4_desc": "Synchronisiere deine Daten sicher via WebDAV oder Git mit End-to-End Verschlüsselung. Deine Daten bleiben privat.",
+    "f5_title": "PDF & Annotation",
+    "f5_desc": "Integrierter PDF-Reader mit Deep-Links. Verknüpfe deine Notizen direkt mit spezifischen Stellen in deinen PDF-Dokumenten.",
+    "f6_title": "Multi-Window & Biometrie",
+    "f6_desc": "Nutze mehrere Fenster auf dem Desktop und schütze deine Daten auf dem Handy sicher per Fingerabdruck oder FaceID."
+  },
+  "ai": {
+    "badge": "Local AI",
+    "title": "Mehr als nur ein Notizbuch: ",
+    "titleAccent": "Intelligente Assistenz.",
+    "desc": "NexusBrain nutzt lokale KI, um dein Wissen zum Leben zu erwecken. Kein Datentransfer in die Cloud, 100% Privatsphäre.",
+    "s1_title": "Semantische Suche",
+    "s1_desc": "Finde Inhalte basierend auf der Bedeutung, nicht nur auf exakten Keywords. „Such nach Projektideen“ findet auch „Inspiration für neue Apps“.",
+    "s2_title": "Automatische Themenextraktion",
+    "s2_desc": "Die KI schlägt automatisch Tags und Kategorien basierend auf deinen Inhalten vor.",
+    "s3_title": "Hidden Connections",
+    "s3_desc": "Entdecke während des Schreibens automatisch Verknüpfungen zu anderen Seiten, die du vielleicht vergessen hast.",
+    "mockup_analyzing": "Wissensgraph analysieren...",
+    "mockup_found": "3 versteckte Verbindungen gefunden!",
+    "mockup_suggesting": "Schlage Tags vor: #ai #privacy #future",
+    "mockup_match": "semantischer Treffer: \"AI Vision\" <-> \"Future Tech\""
+  },
+  "comparison": {
+    "title": "Warum NexusBrain?",
+    "subtitle": "Ein Vergleich mit den Großen.",
+    "feature": "Feature",
+    "f1": "Block-basiert (Outliner)",
+    "f2": "Native Mobil-App",
+    "f3": "Integrierte Local AI",
+    "f4": "Cloud-Sync (Eigener Server)",
+    "f5": "UI/UX Design",
+    "f6": "Multi-Window Support",
+    "yes": "Ja",
+    "no": "Nein",
+    "excellent": "Exzellent",
+    "medium": "Mittel",
+    "native": "Native",
+    "plugins": "Plugins",
+    "paid": "Paid Sync",
+    "modern": "Modern/Glass",
+    "functional": "Funktional",
+    "customizable": "Anpassbar",
+    "limited": "Begrenzt"
+  },
+  "download": {
+    "title": "Bereit für NexusBrain?",
+    "subtitle": "Egal ob Web, Desktop oder Mobile – NexusBrain ist überall dort, wo du deine Gedanken festhalten willst.",
+    "web": "Web App öffnen"
+  },
+  "footer": {
+    "desc": "Dein zweites Gehirn – Sicher, Lokal, Intelligent.",
+    "links": "Links",
+    "legal": "Rechtliches",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "tos": "AGB"
+  }
+}

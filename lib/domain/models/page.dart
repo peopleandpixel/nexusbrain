@@ -1,5 +1,4 @@
 import 'package:isar_community/isar.dart';
-import 'block.dart';
 import 'tag.dart';
 
 part 'page.g.dart';
@@ -13,6 +12,7 @@ class Page {
 
   late String title;
   String? filePath;
+  String? pdfPath;
   bool isJournal = false;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -23,6 +23,7 @@ class Page {
     required this.pageId,
     required this.title,
     this.filePath,
+    this.pdfPath,
     this.isJournal = false,
     this.createdAt,
     this.updatedAt,

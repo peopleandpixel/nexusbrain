@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>((ref) {
-  return LocaleNotifier();
-});
+part 'locale_state.g.dart';
 
-class LocaleNotifier extends StateNotifier<Locale> {
-  LocaleNotifier() : super(const Locale('de')) {
+@riverpod
+class LocaleNotifier extends _$LocaleNotifier {
+  @override
+  Locale build() {
     _load();
+    return const Locale('de');
   }
 
   static const _key = 'locale';

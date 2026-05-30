@@ -16,7 +16,7 @@ class TaskRepository {
   Future<List<Block>> searchTasks(String query) => _repo.searchTasks(query);
 
   Future<Block> createTask(String pageId, String content,
-      {String state = 'TODO'}) async {
+      {String state = 'TODO',}) async {
     final block = await _repo.createBlock(pageId, content: content);
     block.taskState = state;
     return _repo.updateBlock(block);

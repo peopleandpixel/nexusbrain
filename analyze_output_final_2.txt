@@ -1,0 +1,5 @@
+Analyzing nexusbrain...                                         
+
+warning • The operand can't be 'null', so the condition is always 'true' • lib/data/services/mobile_service.dart:57:21 • unnecessary_null_comparison
+  error • The function 'StateProvider' isn't defined • lib/presentation/state/shortcut_state.dart:3:33 • undefined_function
+

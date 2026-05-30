@@ -1,0 +1,97 @@
+{
+  "nav": {
+    "features": "Fonctionnalités",
+    "ai": "Vision IA",
+    "comparison": "Comparaison",
+    "download": "Télécharger",
+    "start": "Démarrer"
+  },
+  "hero": {
+    "title": "Votre savoir, ",
+    "titleAccent": "connecté & intelligent.",
+    "subtitle": "NexusBrain est l'alternative moderne à Logseq. Organisez vos pensées en blocs, découvrez des connexions cachées avec l'IA locale et gardez le contrôle total sur vos données.",
+    "cta_primary": "Télécharger gratuitement",
+    "cta_secondary": "Explorer les fonctionnalités",
+    "badge_local": "100% Local",
+    "badge_sync": "Sync Cloud",
+    "badge_ai": "IA Locale"
+  },
+  "stats": {
+    "structure": "Structure",
+    "structure_val": "Basé sur les blocs",
+    "structure_desc": "Imbrication infinie",
+    "connections": "Connexions",
+    "connections_val": "Bidirectionnel",
+    "connections_desc": "Liens & Réf",
+    "performance": "Performance",
+    "performance_val": "Natif",
+    "performance_desc": "Bureau, Mobile & Web"
+  },
+  "features": {
+    "title": "Fonctionnalités puissantes pour les utilisateurs avancés",
+    "subtitle": "NexusBrain combine les meilleurs concepts de la pensée en réseau avec une technologie de pointe.",
+    "f1_title": "Éditeur basé sur les blocs",
+    "f1_desc": "Un outliner de type Logseq avec une imbrication infinie. Concentrez-vous sur des blocs individuels et organisez vos connaissances de manière granulaire.",
+    "f2_title": "WikiLinks & Réf",
+    "f2_desc": "Liez des pages avec `[[Page]]` et référencez des blocs avec `((block))`. Construisez un réseau d'informations qui grandit avec vous.",
+    "f3_title": "Visualisation graphique",
+    "f3_desc": "Carte visuelle interactive de toutes les connexions. Naviguez intuitivement dans votre réseau de connaissances et découvrez des clusters.",
+    "f4_title": "Sync Cloud (WebDAV/Git)",
+    "f4_desc": "Synchronisez vos données en toute sécurité via WebDAV (Nextcloud, ownCloud) ou Git. Vous gardez la souveraineté sur vos données.",
+    "f5_title": "Plugins & Scripting",
+    "f5_desc": "Étendez NexusBrain avec des plugins basés sur JavaScript. Adaptez l'éditeur et le flux de travail exactement à vos besoins.",
+    "f6_title": "Support multi-fenêtres",
+    "f6_desc": "Sur le bureau, vous pouvez ouvrir plusieurs notes simultanément dans des fenêtres séparées – idéal pour un travail productif."
+  },
+  "ai": {
+    "badge": "IA Locale",
+    "title": "Plus qu'un simple carnet : ",
+    "titleAccent": "Assistance intelligente.",
+    "desc": "NexusBrain utilise l'IA locale pour donner vie à vos connaissances. Pas de transfert de données vers le cloud, 100% confidentialité.",
+    "s1_title": "Recherche sémantique",
+    "s1_desc": "Trouvez du contenu basé sur le sens, pas seulement sur des mots-clés exacts. « Chercher des idées de projet » trouve aussi « Inspiration pour de nouvelles applis ».",
+    "s2_title": "Extraction automatique de thèmes",
+    "s2_desc": "L'IA suggère automatiquement des tags et des catégories en fonction de votre contenu.",
+    "s3_title": "Connexions cachées",
+    "s3_desc": "Découvrez automatiquement des liens vers d'autres pages que vous auriez pu oublier pendant l'écriture.",
+    "mockup_analyzing": "analyse du graphe de connaissances...",
+    "mockup_found": "3 connexions cachées trouvées !",
+    "mockup_suggesting": "suggestion de tags : #ia #confidentialité #futur",
+    "mockup_match": "correspondance sémantique : \"Vision IA\" <-> \"Tech Futuriste\""
+  },
+  "comparison": {
+    "title": "Pourquoi NexusBrain ?",
+    "subtitle": "Une comparaison avec les grands.",
+    "feature": "Fonctionnalité",
+    "f1": "Basé sur les blocs (Outliner)",
+    "f2": "App mobile native",
+    "f3": "IA locale intégrée",
+    "f4": "Sync Cloud (Propre serveur)",
+    "f5": "Design UI/UX",
+    "f6": "Support multi-fenêtres",
+    "yes": "Oui",
+    "no": "Non",
+    "excellent": "Excellent",
+    "medium": "Moyen",
+    "native": "Natif",
+    "plugins": "Plugins",
+    "paid": "Sync payante",
+    "modern": "Moderne/Glass",
+    "functional": "Fonctionnel",
+    "customizable": "Personnalisable",
+    "limited": "Limité"
+  },
+  "download": {
+    "title": "Prêt pour NexusBrain ?",
+    "subtitle": "Que ce soit sur le web, le bureau ou le mobile – NexusBrain est partout où vous voulez capturer vos pensées.",
+    "web": "Ouvrir l'app Web"
+  },
+  "footer": {
+    "desc": "Votre second cerveau – Sûr, Local, Intelligent.",
+    "links": "Liens",
+    "legal": "Mentions légales",
+    "imprint": "Empreinte",
+    "privacy": "Confidentialité",
+    "tos": "CGU"
+  }
+}

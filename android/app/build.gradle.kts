@@ -1,8 +1,22 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
+
     id("com.android.application")
     id("kotlin-android")
+
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+
     id("dev.flutter.flutter-gradle-plugin")
+
+}
+
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -16,7 +30,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -27,12 +41,31 @@ android {
         versionName = flutter.versionName
     }
 
+    configurations.all {
+        resolutionStrategy {
+            force("androidx.glance:glance:1.1.1")
+            force("androidx.glance:glance-appwidget:1.1.1")
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Replace with release signing key before publishing
-            // Create key: keytool -genkey -v -keystore ~/nexusbrain-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias nexusbrain
-            // Then configure signingConfig with a key.properties file
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (rootProject.file("key.properties").exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }

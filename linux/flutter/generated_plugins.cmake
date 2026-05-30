@@ -3,7 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_multi_window
+  dynamic_color
+  flutter_js
+  flutter_onnxruntime
   isar_community_flutter_libs
+  syncfusion_pdfviewer_linux
+  url_launcher_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
